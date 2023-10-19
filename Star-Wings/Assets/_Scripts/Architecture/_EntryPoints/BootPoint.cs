@@ -1,11 +1,12 @@
-using System;
 using System.Collections;
-using _Scripts.Architecture.Managers;
+using Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class BootPoint : MonoBehaviour
 {
+    private const int NEXT_SCENE = 1;
+
     [SerializeField] private GameObject _managersHolder;
 
     private IEnumerator Start()
@@ -13,9 +14,9 @@ public class BootPoint : MonoBehaviour
         GameManager gameManager = _managersHolder.AddComponent<GameManager>();
         yield return null;
         gameManager.isExists = true;
-        
+
         DontDestroyOnLoad(_managersHolder);
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(NEXT_SCENE);
     }
 }
