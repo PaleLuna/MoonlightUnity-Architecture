@@ -1,4 +1,4 @@
-﻿public interface ILateUpdatable
+﻿public interface ILateUpdatable : IGameComponent
 {
     void LateUpdateRun();
 }

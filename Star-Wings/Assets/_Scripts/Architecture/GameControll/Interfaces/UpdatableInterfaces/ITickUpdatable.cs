@@ -1,4 +1,4 @@
-﻿public interface ITickUpdatable
+﻿public interface ITickUpdatable : IGameComponent
 {
     void EveryTickRun();
 }

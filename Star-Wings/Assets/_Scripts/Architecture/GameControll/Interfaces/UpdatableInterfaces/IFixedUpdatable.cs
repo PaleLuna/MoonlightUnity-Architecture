@@ -1,4 +1,4 @@
-﻿public interface IFixedUpdatable
+﻿public interface IFixedUpdatable : IGameComponent
 {
     void FixedFrameRun();
 }
