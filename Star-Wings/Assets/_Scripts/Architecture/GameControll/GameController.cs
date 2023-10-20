@@ -1,6 +1,6 @@
-﻿namespace _Scripts.Architecture.Controllers
+﻿using UnityEngine;
+
+public class GameController : MonoBehaviour
 {
-    public class GameController
-    {
-    }
+    
 }

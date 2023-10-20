@@ -1,21 +1,19 @@
 using System.Collections;
-using Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class BootPoint : MonoBehaviour
 {
     private const int NEXT_SCENE = 1;
 
-    [SerializeField] private GameObject _managersHolder;
+    [SerializeField] private GameObject _dontDestroyObject;
 
     private IEnumerator Start()
     {
-        GameManager gameManager = _managersHolder.AddComponent<GameManager>();
         yield return null;
-        gameManager.isExists = true;
 
-        DontDestroyOnLoad(_managersHolder);
+        DontDestroyOnLoad(_dontDestroyObject);
 
         SceneManager.LoadScene(NEXT_SCENE);
     }
