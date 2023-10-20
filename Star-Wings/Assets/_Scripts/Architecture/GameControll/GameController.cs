@@ -8,10 +8,26 @@ public class GameController : MonoBehaviour
     public DataHolder<IPausable> pausablesHolder { get; private set; }
     public DataHolder<IStartable> startableHolder { get; private set; }
 
-    public void Start()
+    private void Start()
     {
         updatablesHolder = new UpdatablesHolder();
         pausablesHolder = new DataHolder<IPausable>();
         startableHolder = new DataHolder<IStartable>();
     }
+
+    private void Update() => 
+        updatablesHolder.everyFrameUpdatablesHolder
+            .ForEach(updatable => updatable.EveryFrameRun());
+
+    private void FixedUpdate() => 
+        updatablesHolder.fixedUpdatablesHolder
+            .ForEach(updatable => updatable.FixedFrameRun());
+
+    private void LateUpdate() =>
+        updatablesHolder.lateUpdatablesHolder
+            .ForEach(updatable => updatable.LateUpdateRun());
+
+    private void Tick() =>
+        updatablesHolder.tickUpdatableHolder
+            .ForEach(updatable => updatable.EveryTickRun());
 }
