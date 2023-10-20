@@ -22,9 +22,9 @@ public class ServiceLocator : Singletone<ServiceLocator>,  IServiceHolder
         return newComponent;
     }
 
-    public void Unregister<TP>(TP component)
+    public void Unregister<TP>()
     {
-        Type type = component.GetType();
+        Type type = typeof(TP);
 
         if (!_componentsMap.ContainsKey(type))
             throw new Exception($"item of type {type} doesn't exist in this map");
