@@ -11,6 +11,14 @@ namespace _Scripts.Architecture.DataHolders.Implementations
         public DataHolder<ILateUpdatable> lateUpdatablesHolder { get; private set; }
         public DataHolder<ITickUpdatable> tickUpdatableHolder { get; private set; }
 
+        public UpdatablesHolder()
+        {
+            everyFrameUpdatablesHolder = new DataHolder<IUpdatable>();
+            fixedUpdatablesHolder = new DataHolder<IFixedUpdatable>();
+            lateUpdatablesHolder = new DataHolder<ILateUpdatable>();
+            tickUpdatableHolder = new DataHolder<ITickUpdatable>();
+        }
+        
         public void Registration(IUpdatable item) =>
             everyFrameUpdatablesHolder.Registration(item);
         public void Registration(IFixedUpdatable item) =>

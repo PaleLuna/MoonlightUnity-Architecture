@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2dbc1b72381ffe4cb0d54f95112547a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _managersHolder: {fileID: 347867607}
+  _dontDestroyObject: {fileID: 347867607}
 --- !u!1 &347867607
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 347867608}
   m_Layer: 0
-  m_Name: GAME
+  m_Name: DontDestroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

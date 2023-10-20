@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -11,9 +12,14 @@ public class BootPoint : MonoBehaviour
 
     private IEnumerator Start()
     {
+        DontDestroyOnLoad(_dontDestroyObject);
+
         yield return null;
 
-        DontDestroyOnLoad(_dontDestroyObject);
+        ServiceLocator serviceLocator = _dontDestroyObject.AddComponent<ServiceLocator>();
+        GameController gameController = _dontDestroyObject.AddComponent<GameController>();
+
+        serviceLocator.Register<GameController>(gameController);
 
         SceneManager.LoadScene(NEXT_SCENE);
     }

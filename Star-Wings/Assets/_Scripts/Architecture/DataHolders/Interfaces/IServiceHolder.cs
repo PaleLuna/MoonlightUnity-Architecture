@@ -1,9 +1,9 @@
 ﻿using UnityEngine.Events;
 
-public interface IServiceHolder<T> where T : IService
+public interface IServiceHolder 
 {
-    TP Register<TP>(TP newComponent) where TP : T;
-    void Unregister<TP>(TP component) where TP : T;
+    TP Register<TP>(TP newComponent);
+    void Unregister<TP>(TP component);
     
-    TP Get<TP>() where TP : T;
+    TP Get<TP>();
 }

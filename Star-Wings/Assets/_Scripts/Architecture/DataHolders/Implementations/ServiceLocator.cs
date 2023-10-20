@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine.Events;
 
-public class ServiceLocator<T> : Singletone<ServiceLocator<T>>,  IServiceHolder<T> where T : IService
+public class ServiceLocator : Singletone<ServiceLocator>,  IServiceHolder
 {
-    private Dictionary<Type, T> _componentsMap;
+    private Dictionary<Type, Object> _componentsMap;
 
-    public TP Register<TP>(TP newComponent) where TP : T
+    public ServiceLocator()
+    {
+        _componentsMap = new Dictionary<Type, object>();
+    }
+    
+    public TP Register<TP>(TP newComponent)
     {
         Type type = newComponent.GetType();
 
@@ -18,7 +22,7 @@ public class ServiceLocator<T> : Singletone<ServiceLocator<T>>,  IServiceHolder<
         return newComponent;
     }
 
-    public void Unregister<TP>(TP component) where TP : T
+    public void Unregister<TP>(TP component)
     {
         Type type = component.GetType();
 
@@ -28,7 +32,7 @@ public class ServiceLocator<T> : Singletone<ServiceLocator<T>>,  IServiceHolder<
         _componentsMap.Remove(type);
     }
 
-    public TP Get<TP>() where TP : T
+    public TP Get<TP>()
     {
         Type type = typeof(TP);
 

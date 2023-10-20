@@ -2,7 +2,7 @@
 using _Scripts.Architecture.DataHolders.Implementations;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IService
 {
     public UpdatablesHolder updatablesHolder { get; private set; }
     public DataHolder<IPausable> pausablesHolder { get; private set; }
