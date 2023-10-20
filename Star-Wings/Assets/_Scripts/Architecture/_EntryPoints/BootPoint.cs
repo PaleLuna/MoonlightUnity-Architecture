@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Object = System.Object;
 
 public class BootPoint : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class BootPoint : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
         
-        serviceLocator.Register<GameController>(gameController);
+        serviceLocator.Registarion<GameController>(gameController);
 
         SetupGameController();
         
@@ -35,10 +36,10 @@ public class BootPoint : MonoBehaviour
         GameController gameController = ServiceLocator.Instance.Get<GameController>();
 
         gameController.stateHolder
-            .Register(new StartState(gameController));
+            .Registarion(new StartState(gameController));
         gameController.stateHolder
-            .Register(new PlayState(gameController));
+            .Registarion(new PlayState(gameController));
         gameController.stateHolder
-            .Register(new PauseState(gameController));
+            .Registarion(new PauseState(gameController));
     }
 }

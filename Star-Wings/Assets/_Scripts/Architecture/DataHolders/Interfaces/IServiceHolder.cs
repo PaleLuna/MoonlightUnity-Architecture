@@ -1,9 +1,6 @@
 ﻿using UnityEngine.Events;
 
-public interface IServiceHolder 
+public interface IServiceHolder : ISingleRegistration
 {
-    TP Register<TP>(TP newComponent);
-    void Unregister<TP>();
-    
     TP Get<TP>();
 }

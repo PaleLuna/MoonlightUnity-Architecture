@@ -11,19 +11,19 @@ namespace _Scripts.Other.Patterns.StatePattern
         public StateHolder() => _stateMap = new Dictionary<Type, T>();
 
 
-        public TP Register<TP>(TP state) where TP : T
+        public TP Registarion<TP>(TP item) where TP : T
         {
-            Type type = state.GetType();
+            Type type = item.GetType();
 
             if (_stateMap.ContainsKey(type))
                 throw new Exception($"Cannot add item of type {type}. This type already exists");
 
-            _stateMap[type] = state;
+            _stateMap[type] = item;
 
-            return state;
+            return (TP)item;
         }
 
-        public TP UnRegister<TP>() where TP : T
+        public TP Unregistration<TP>() where TP : T
         {
             Type type = typeof(TP);
 
@@ -36,7 +36,7 @@ namespace _Scripts.Other.Patterns.StatePattern
             return item;
         }
 
-        public void ChangeState<TP>()
+        public void ChangeState<TP>() where TP : T
         {
             Type type = typeof(TP);
             

@@ -1,6 +1,4 @@
-﻿using System;
-using _Scripts.Architecture.DataHolders.Implementations;
-using _Scripts.Other.Patterns.StatePattern;
+﻿using _Scripts.Other.Patterns.StatePattern;
 using UnityEngine;
 
 public class GameController : MonoBehaviour, IService
@@ -8,7 +6,6 @@ public class GameController : MonoBehaviour, IService
     public UpdatablesHolder updatablesHolder { get; private set; }
     public DataHolder<IPausable> pausablesHolder { get; private set; }
     public DataHolder<IStartable> startableHolder { get; private set; }
-    
     public StateHolder<GameStateBase> stateHolder { get; private set; }
 
 

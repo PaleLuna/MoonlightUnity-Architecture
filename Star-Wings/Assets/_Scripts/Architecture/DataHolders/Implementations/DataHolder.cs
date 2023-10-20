@@ -39,18 +39,9 @@ public class DataHolder<T> : IDataHolder<T>
         return item;
     }
 
-    public void UnRegistration(T item)
-    {
-        _itemsList.Remove(item);
-    }
+    public void Unregistration(T item) => _itemsList.Remove(item);
 
-    public T At(int index)
-    {
-        return _itemsList[index];
-    }
+    public T At(int index) => _itemsList[index];
 
-    public void ForEach(Action<T> action)
-    {
-        _itemsList.ForEach(action);
-    }
+    public void ForEach(Action<T> action) => _itemsList.ForEach(action);
 }
