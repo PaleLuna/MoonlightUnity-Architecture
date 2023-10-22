@@ -6,7 +6,7 @@ namespace _Scripts.Other.Patterns.StatePattern
     public class StateHolder<T> : IStateHolder<T> where T : State
     {
         private Dictionary<Type, T> _stateMap;
-        public T currentState;
+        public T currentState { get; private set; }
 
         public StateHolder() => _stateMap = new Dictionary<Type, T>();
 
@@ -20,7 +20,7 @@ namespace _Scripts.Other.Patterns.StatePattern
 
             _stateMap[type] = item;
 
-            return (TP)item;
+            return item;
         }
 
         public TP Unregistration<TP>() where TP : T
