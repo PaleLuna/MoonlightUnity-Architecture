@@ -1,4 +1,4 @@
-﻿public interface IStateHolder<T> : ISingleRegistration<T> where T : State
+﻿public interface IStateHolder<T> where T : State
 {
     void ChangeState<TP>() where TP : T;
 }

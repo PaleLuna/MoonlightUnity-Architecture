@@ -5,46 +5,34 @@ namespace _Scripts.Other.Patterns.StatePattern
 {
     public class StateHolder<T> : IStateHolder<T> where T : State
     {
-        private Dictionary<Type, T> _stateMap;
+        private UniqDataHolder<T> _stateMap;
         public T currentState { get; private set; }
 
-        public StateHolder() => _stateMap = new Dictionary<Type, T>();
+        public StateHolder() => _stateMap = new UniqDataHolder<T>();
 
 
         public TP Registarion<TP>(TP item) where TP : T
         {
-            Type type = item.GetType();
-
-            if (_stateMap.ContainsKey(type))
-                throw new Exception($"Cannot add item of type {type}. This type already exists");
-
-            _stateMap[type] = item;
+            _stateMap.Registration<TP>(item);
 
             return item;
         }
 
-        public TP Unregistration<TP>() where TP : T
+        public TP Unregistration<TP>(TP item) where TP : T
         {
-            Type type = typeof(TP);
-
-            if (!_stateMap.ContainsKey(type))
-                throw new Exception($"item of type {type} doesn't exist in this map");
-
-            TP item = (TP)_stateMap[type];
-            _stateMap.Remove(type);
-
-            return item;
+            return _stateMap.Unregistration<TP>(item);
         }
 
         public void ChangeState<TP>() where TP : T
         {
             Type type = typeof(TP);
+
+            T newState = _stateMap.GetFirstByType<TP>();
             
-            if(!_stateMap.ContainsKey(type)) 
-                throw new NullReferenceException($"State of type {type} doesn't exist in this map");
+            if(newState == null) return;
             
             currentState?.StateStop();
-            currentState = _stateMap[type];
+            currentState = newState;
             currentState.StateStart();
         }
     }

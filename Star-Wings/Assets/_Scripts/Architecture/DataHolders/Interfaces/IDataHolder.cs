@@ -1,11 +1,15 @@
 ﻿using System;
 using UnityEngine.Events;
 
-public interface IDataHolder<T> : IRegistration<T>
+public interface IDataHolder<T>
 {
     UnityEvent<T> OnItemAdded { get; }
-    T Registration(T item, int order);
+    TP Registration<TP>(TP item, int order) where TP : T; 
+    TP Registration<TP>(TP item) where TP : T;
+    TP Unregistration<TP>(TP item) where TP : T;
     
     T At(int index);
+    TP GetFirstByType<TP>() where TP : T;
+    
     void ForEach(Action<T> action);
 }
