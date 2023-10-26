@@ -27,6 +27,7 @@ public class BootPoint : MonoBehaviour
         SetupGameController();
         
         gameController.stateHolder.ChangeState<PlayState>();
+        Debug.Log(gameController.stateHolder.currentState);
 
         SceneManager.LoadScene(NEXT_SCENE);
     }
