@@ -2,43 +2,61 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-public class BootPoint : MonoBehaviour
+namespace PaleLuna.Architecture
 {
-    private const int NEXT_SCENE = 1;
-
-    [SerializeField] private GameObject _dontDestroyObject;
-
-    private IEnumerator Start()
+    public class BootPoint : MonoBehaviour
     {
-        DontDestroyOnLoad(_dontDestroyObject);
+        [SerializeField, Min(0)] private int _nextScene = 1;
 
-        yield return null;
+        [SerializeField] private GameObject _dontDestroyObject;
 
-        ServiceLocator serviceLocator = _dontDestroyObject.AddComponent<ServiceLocator>();
-        GameController gameController = _dontDestroyObject.AddComponent<GameController>();
-
-        yield return new WaitForEndOfFrame();
+        [SerializeField] private Test test;
         
-        serviceLocator.Registarion<GameController>(gameController);
+        private void OnValidate()
+        {
+            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
+        }
 
-        SetupGameController();
-        
-        gameController.stateHolder.ChangeState<PlayState>();
-        Debug.Log(gameController.stateHolder.currentState);
+        private IEnumerator Start()
+        {
+            DontDestroyOnLoad(_dontDestroyObject);
 
-        SceneManager.LoadScene(NEXT_SCENE);
-    }
+            yield return null;
 
-    private void SetupGameController()
-    {
-        GameController gameController = ServiceLocator.Instance.Get<GameController>();
+            ServiceLocator serviceLocator = _dontDestroyObject.AddComponent<ServiceLocator>();
+            GameController gameController = _dontDestroyObject.AddComponent<GameController>();
 
-        gameController.stateHolder
-            .Registarion(new StartState(gameController));
-        gameController.stateHolder
-            .Registarion(new PlayState(gameController));
-        gameController.stateHolder
-            .Registarion(new PauseState(gameController));
+            yield return new WaitForEndOfFrame();
+
+            serviceLocator.Registarion<GameController>(gameController);
+
+            SetupGameController();
+
+            gameController.stateHolder.ChangeState<PlayState>();
+
+            yield return new WaitForEndOfFrame();
+            
+        }
+
+        private void SetupGameController()
+        {
+            GameController gameController = ServiceLocator.Instance.Get<GameController>();
+
+            gameController.stateHolder
+                .Registarion(new StartState(gameController));
+            gameController.stateHolder
+                .Registarion(new PlayState(gameController));
+            gameController.stateHolder
+                .Registarion(new PauseState(gameController));
+            
+            gameController.updatablesHolder.Registration(test);
+        }
+
+        private void JumpToScene(int sceneNum = -1)
+        {
+            if (sceneNum < 0) sceneNum = _nextScene;
+            
+            SceneManager.LoadScene(_nextScene);
+        }
     }
 }

@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour, IService
 {
-    public UpdatablesHolder updatablesHolder { get; private set; }
     public DataHolder<IPausable> pausablesHolder { get; private set; }
     public DataHolder<IStartable> startableHolder { get; private set; }
+    public UpdatablesHolder updatablesHolder { get; private set; }
     public StateHolder<GameStateBase> stateHolder { get; private set; }
-
 
     #region MonoEvents
 
@@ -21,9 +20,13 @@ public class GameController : MonoBehaviour, IService
     }
 
 
-    private void Update() => 
+    private void Update()
+    {
+        startableHolder.ForEach(startable => startable.OnStart());
+        
         updatablesHolder.everyFrameUpdatablesHolder
             .ForEach(updatable => updatable.EveryFrameRun());
+    }
 
     private void FixedUpdate() => 
         updatablesHolder.fixedUpdatablesHolder

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine.Events;
-
-
-public class UpdatablesHolder
+﻿public class UpdatablesHolder
 {
     public DataHolder<IUpdatable> everyFrameUpdatablesHolder { get; private set; }
     public DataHolder<IFixedUpdatable> fixedUpdatablesHolder { get; private set; }
