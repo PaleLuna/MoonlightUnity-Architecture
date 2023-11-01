@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,11 +7,14 @@ namespace PaleLuna.Architecture
 {
     public class BootPoint : MonoBehaviour
     {
+        private const int DEFAULT_LIST_CAPACITY = 10;
+        
         [SerializeField, Min(0)] private int _nextScene = 1;
-
-        [SerializeField] private GameObject _dontDestroyObject;
-
         [SerializeField] private Test test;
+        private GameObject _dontDestroyObject;
+
+        private List<IInitializer> _initializersList = new List<IInitializer>(DEFAULT_LIST_CAPACITY);
+        
         
         private void OnValidate()
         {
@@ -19,37 +23,51 @@ namespace PaleLuna.Architecture
 
         private IEnumerator Start()
         {
-            DontDestroyOnLoad(_dontDestroyObject);
-
+            _dontDestroyObject = new GameObject("DontDestroy");
+            
             yield return null;
 
             ServiceLocator serviceLocator = _dontDestroyObject.AddComponent<ServiceLocator>();
-            GameController gameController = _dontDestroyObject.AddComponent<GameController>();
 
-            yield return new WaitForEndOfFrame();
-
-            serviceLocator.Registarion<GameController>(gameController);
-
-            SetupGameController();
-
-            gameController.stateHolder.ChangeState<PlayState>();
-
-            yield return new WaitForEndOfFrame();
+            FillInitializers();
+            StartAllInitializers();
             
+            int currentDoneInits = 0;
+            
+            while (currentDoneInits < _initializersList.Count)
+            {
+                int lastDoneInits = 0;
+                
+                foreach (IInitializer item in _initializersList)
+                    if (item.status == InitStatus.Done)
+                        lastDoneInits++;
+
+                if (lastDoneInits > currentDoneInits)
+                {
+                    currentDoneInits = lastDoneInits;
+                    print($"Loading services: {currentDoneInits} / {_initializersList.Count}");
+                }
+
+                yield return null;
+            }
+
+            yield return null;
+            
+            ServiceLocator.Instance.
+                GetComponent<GameController>()
+                .stateHolder
+                .ChangeState<PlayState>();
         }
 
-        private void SetupGameController()
+        private void FillInitializers()
         {
-            GameController gameController = ServiceLocator.Instance.Get<GameController>();
+            _initializersList
+                .Add(new GameControllerIInitializer(_dontDestroyObject));
+        }
 
-            gameController.stateHolder
-                .Registarion(new StartState(gameController));
-            gameController.stateHolder
-                .Registarion(new PlayState(gameController));
-            gameController.stateHolder
-                .Registarion(new PauseState(gameController));
-            
-            gameController.updatablesHolder.Registration(test);
+        private void StartAllInitializers()
+        {
+            _initializersList.ForEach(initializer => initializer.StartInit());
         }
 
         private void JumpToScene(int sceneNum = -1)
@@ -58,5 +76,7 @@ namespace PaleLuna.Architecture
             
             SceneManager.LoadScene(_nextScene);
         }
+        
+        
     }
 }

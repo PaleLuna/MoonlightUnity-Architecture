@@ -1,16 +1,14 @@
 ﻿using _Scripts.Other.Patterns.StatePattern;
 using UnityEngine;
 
-public class GameController : MonoBehaviour, IService
+public class GameController : MonoBehaviour, IService, IStartable
 {
     public DataHolder<IPausable> pausablesHolder { get; private set; }
     public DataHolder<IStartable> startableHolder { get; private set; }
     public UpdatablesHolder updatablesHolder { get; private set; }
     public StateHolder<GameStateBase> stateHolder { get; private set; }
-
-    #region MonoEvents
-
-    private void Start()
+    
+    public void OnStart()
     {
         stateHolder = new StateHolder<GameStateBase>();
         
@@ -18,8 +16,8 @@ public class GameController : MonoBehaviour, IService
         pausablesHolder = new DataHolder<IPausable>();
         startableHolder = new DataHolder<IStartable>();
     }
-
-
+    
+    #region MonoEvents
     private void Update()
     {
         startableHolder.ForEach(startable => startable.OnStart());
@@ -41,4 +39,6 @@ public class GameController : MonoBehaviour, IService
             .ForEach(updatable => updatable.EveryTickRun());
 
     #endregion
+
+    
 }

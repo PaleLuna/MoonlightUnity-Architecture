@@ -4,7 +4,7 @@
     {
         public InitStatus status { get; }
 
-        public void Init();
+        public void StartInit();
     }
     
     public enum InitStatus

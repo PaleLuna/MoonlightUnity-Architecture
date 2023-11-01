@@ -9,6 +9,6 @@ public class Test : MonoBehaviour, IUpdatable
 
     private void OnDestroy()
     {
-        ServiceLocator.Instance.Get<GameController>().updatablesHolder.UnRegistration(this);
+        ServiceLocator.Instance.Get<GameController>()?.updatablesHolder.UnRegistration(this);
     }
 }
