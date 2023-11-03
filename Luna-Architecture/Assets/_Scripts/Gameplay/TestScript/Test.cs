@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class Test : MonoBehaviour, IUpdatable
+public class Test : MonoBehaviour, IUpdatable, IStartable
 {
-    public void EveryFrameRun()
-    {
-        Debug.Log($"Run {this}");
-    }
+    public void OnStart() =>
+        ServiceLocator.Instance.Get<GameController>()?
+            .updatablesHolder.Registration(this);
 
-    private void OnDestroy()
-    {
-        ServiceLocator.Instance.Get<GameController>()?.updatablesHolder.UnRegistration(this);
-    }
+    public void EveryFrameRun() => 
+        Debug.Log($"Run {this}");
+
+    private void OnDestroy() => 
+        ServiceLocator.Instance?.Get<GameController>()?
+            .updatablesHolder.UnRegistration(this);
+
+    
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,16 +17,17 @@ namespace PaleLuna.Architecture
         private List<IInitializer> _initializersList = new List<IInitializer>(DEFAULT_LIST_CAPACITY);
         
         
-        private void OnValidate()
-        {
+        private void OnValidate() => 
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
-        }
 
-        private IEnumerator Start()
+        private void Start() => 
+            BootGame();
+
+        private async UniTaskVoid BootGame()
         {
             _dontDestroyObject = new GameObject("DontDestroy");
             
-            yield return null;
+            await UniTask.Yield();
 
             ServiceLocator serviceLocator = _dontDestroyObject.AddComponent<ServiceLocator>();
 
@@ -48,10 +50,10 @@ namespace PaleLuna.Architecture
                     print($"Loading services: {currentDoneInits} / {_initializersList.Count}");
                 }
 
-                yield return null;
+                await UniTask.Yield();
             }
 
-            yield return null;
+            await UniTask.Yield();
             
             ServiceLocator.Instance.
                 GetComponent<GameController>()
@@ -76,7 +78,5 @@ namespace PaleLuna.Architecture
             
             SceneManager.LoadScene(_nextScene);
         }
-        
-        
     }
 }
