@@ -59,9 +59,7 @@ namespace PaleLuna.Architecture
                 .Registarion(new PauseState(_gameController));
         }
 
-        ~GameControllerIInitializer()
-        {
+        ~GameControllerIInitializer() =>
             _tokenSource.Cancel();
-        }
     }
 }

@@ -18,13 +18,9 @@ public class GameController : MonoBehaviour, IService, IStartable
     }
     
     #region MonoEvents
-    private void Update()
-    {
-        startableHolder.ForEach(startable => startable.OnStart());
-        
+    private void Update() =>
         updatablesHolder.everyFrameUpdatablesHolder
             .ForEach(updatable => updatable.EveryFrameRun());
-    }
 
     private void FixedUpdate() => 
         updatablesHolder.fixedUpdatablesHolder
