@@ -4,11 +4,18 @@ using UnityEngine.Events;
 
 public class DictionaryDataHolder<T> : IUniqDataHolder<T>
 {
-    private UnityEvent<T> onItemAdded = new UnityEvent<T>();
-    private Dictionary<Type, T> _itemsMap = new Dictionary<Type, T>();
+    private readonly UnityEvent<T> _onItemAdded = new();
+    private readonly Dictionary<Type, T> _itemsMap;
 
-    public UnityEvent<T> OnItemAdded => onItemAdded;
-    
+    public UnityEvent<T> OnItemAdded => _onItemAdded;
+
+    public int Count => _itemsMap.Count;
+
+    public DictionaryDataHolder()
+    {
+        _itemsMap = new();
+    }
+
     public TP Registration<TP>(TP item) where TP : T
     {
         Type type = item.GetType();
@@ -18,7 +25,7 @@ public class DictionaryDataHolder<T> : IUniqDataHolder<T>
 
         _itemsMap[type] = item;
 
-        onItemAdded.Invoke(item);
+        _onItemAdded.Invoke(item);
         return (TP)item;
     }
 
@@ -45,4 +52,6 @@ public class DictionaryDataHolder<T> : IUniqDataHolder<T>
         foreach (T item in _itemsMap.Values)
             action(item);
     }
+
+    ~DictionaryDataHolder() => _itemsMap.Clear();
 }

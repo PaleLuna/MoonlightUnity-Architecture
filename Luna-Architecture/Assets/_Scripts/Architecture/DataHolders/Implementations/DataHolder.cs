@@ -6,10 +6,12 @@ public class DataHolder<T> : IDataHolder<T>
 {
     private const int DEFAULT_CAPACITY = 10;
 
-    private UnityEvent<T> onItemAdded = new UnityEvent<T>();
+    private readonly UnityEvent<T> onItemAdded = new();
     public UnityEvent<T> OnItemAdded => OnItemAdded;
 
     private List<T> _itemsList;
+
+    public int Count => _itemsList.Count;
 
     public DataHolder(int startCapacity = 0)
     {
@@ -18,7 +20,6 @@ public class DataHolder<T> : IDataHolder<T>
         else
             _itemsList = new List<T>(startCapacity);
     }
-
 
     #region Registration
 
@@ -110,4 +111,6 @@ public class DataHolder<T> : IDataHolder<T>
     }
 
     #endregion
+
+    ~DataHolder() => _itemsList.Clear();
 }

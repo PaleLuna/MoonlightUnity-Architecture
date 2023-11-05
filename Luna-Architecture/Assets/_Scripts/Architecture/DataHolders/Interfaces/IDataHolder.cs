@@ -6,6 +6,8 @@ public interface IDataHolder<T>
 {
     UnityEvent<T> OnItemAdded { get; }
     
+    int Count { get; }
+    
     TP Registration<TP>(TP item, int order) where TP : T;
     public void Registration(List<T> items, ListRegistrationType registrationType = ListRegistrationType.Replace);
 
