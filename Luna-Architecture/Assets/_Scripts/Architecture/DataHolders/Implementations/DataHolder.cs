@@ -48,9 +48,6 @@ public class DataHolder<T> : IDataHolder<T>
         
         return item;
     }
-
-    
-
     public TP Registration<TP>(TP item) where TP : T
     {
         _itemsList.Add(item);
