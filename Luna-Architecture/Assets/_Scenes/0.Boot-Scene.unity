@@ -257,8 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextScene: 1
-  _startables:
-  - {fileID: 0}
+  _startables: []
 --- !u!1 &347867607
 GameObject:
   m_ObjectHideFlags: 0
