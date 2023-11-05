@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 public class ServiceLocator : Singletone<ServiceLocator>
 {
@@ -20,8 +19,5 @@ public class ServiceLocator : Singletone<ServiceLocator>
         return _componentsMap.Unregistration<TP>();
     }
 
-    public TP Get<TP>()
-    {
-        return _componentsMap.GetByType<TP>();
-    }
+    public TP Get<TP>() => _componentsMap.GetByType<TP>();
 }
