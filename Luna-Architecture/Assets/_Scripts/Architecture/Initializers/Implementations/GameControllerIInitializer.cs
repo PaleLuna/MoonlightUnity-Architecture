@@ -28,7 +28,7 @@ namespace PaleLuna.Architecture
 
             _status = InitStatus.Initialization;
 
-            Init(_tokenSource.Token);
+            _ = Init(_tokenSource.Token);
         }
 
         private async UniTaskVoid Init(CancellationToken token)

@@ -11,10 +11,8 @@ public class DictionaryDataHolder<T> : IUniqDataHolder<T>
 
     public int Count => _itemsMap.Count;
 
-    public DictionaryDataHolder()
-    {
+    public DictionaryDataHolder() =>
         _itemsMap = new();
-    }
 
     public TP Registration<TP>(TP item) where TP : T
     {

@@ -30,7 +30,7 @@ namespace PaleLuna.Architecture
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
 
         private void Start() => 
-            BootGame();
+           _ = BootGame();
         
         #endregion
         

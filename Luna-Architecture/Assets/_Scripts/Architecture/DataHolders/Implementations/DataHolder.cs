@@ -65,8 +65,6 @@ public class DataHolder<T> : IDataHolder<T>
 
     public T At(int index)
     {
-        RemoveAllNulls();
-        
         T res = default(T);
 
         if (index >= 0 && index < _itemsList.Count)
@@ -77,13 +75,10 @@ public class DataHolder<T> : IDataHolder<T>
 
     public void Clear() => _itemsList.Clear();
 
-    public void ForEach(Action<T> action)
-    {
-        RemoveAllNulls();
+    public void ForEach(Action<T> action) =>
         _itemsList.ForEach(action);
-    }
 
-    private void RemoveAllNulls() => 
+    public void RemoveAllNulls() => 
         _itemsList.RemoveAll(item => item == null);
     
     
