@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ObjectCounter<T> : ITypeCounter<T>
 {
@@ -25,27 +24,26 @@ public class ObjectCounter<T> : ITypeCounter<T>
 
     public int CheckCount<TP>() where TP : T
     {
-        Type key = typeof(TP);
-        CheckItem(key);
+        Type key = GetKey<TP>();
         return _itemMap[key].Count;
     }
     public TP Pick<TP>() where TP : T
     {
-        Type key = typeof(TP);
-        CheckItem(key);
+        ItemHolder<TP> itemHolder = PickHolder<TP>();
 
-        ItemHolder<T> itemHolder = _itemMap[key];
+        if (itemHolder == null) return default;
 
-        if (itemHolder.Count <= 0) return default(TP);
-
-        return (TP)itemHolder.item;
+        return itemHolder.item;
     }
     public ItemHolder<TP> PickHolder<TP>() where TP : T
     {
-        Type key = typeof(TP);
-        CheckItem(key);
+        ItemHolder<T> itemHolder = GetItemHolder<TP>();
 
-        ItemHolder<T> itemHolder = _itemMap[key];
+        if (itemHolder.Count <= 0) {
+            RemoveEmpty();
+            return default;
+        }
+
         ItemHolder<TP> otherHolder = new ItemHolder<TP>(
             (TP)itemHolder.item, 
             itemHolder.Count);
@@ -55,10 +53,7 @@ public class ObjectCounter<T> : ITypeCounter<T>
 
     public TP PopItems<TP>(int count = 1) where TP : T
     {
-        Type key = typeof(TP);
-        CheckItem(key);
-
-        ItemHolder<T> itemHolder = _itemMap[key];
+        ItemHolder<T> itemHolder = GetItemHolder<TP>();
 
         itemHolder.Count -= count;
 
@@ -80,10 +75,28 @@ public class ObjectCounter<T> : ITypeCounter<T>
         List<Type> keys = new List<Type>(_itemMap.Keys);
 
         foreach (Type key in keys)
-        {
             if (_itemMap[key].Count == 0)
                 _itemMap.Remove(key);
-        }
+    }
+
+    private ItemHolder<T> GetItemHolder<TP>() where TP : T
+    {
+        Type key = GetKey<TP>();
+        return _itemMap[key];
+    }
+
+    private Type GetKey<TP>() where TP : T
+    {
+        Type key = typeof(TP);
+        CheckItem(key);
+
+        return key;
+    }
+
+    private void CheckItem(Type key)
+    {
+        if (!_itemMap.ContainsKey(key))
+            throw new NullReferenceException($"Item of type \"{key}\" doesn't exist in the dictionary");
     }
 
     public override string ToString()
@@ -97,12 +110,6 @@ public class ObjectCounter<T> : ITypeCounter<T>
         }
 
         return res;
-    }
-
-    private void CheckItem(Type key)
-    {
-        if (!_itemMap.ContainsKey(key))
-            throw new NullReferenceException($"Item of type \"{key}\" doesn't exist in the dictionary");
     }
 }
 
