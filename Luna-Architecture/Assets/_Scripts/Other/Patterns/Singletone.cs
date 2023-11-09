@@ -10,12 +10,12 @@ public class Singletone<T> : MonoBehaviour where T : Component
     {
         if (!_instance)
         {
-            _instance = GameObject.FindFirstObjectByType<T>();
+            _instance = FindFirstObjectByType<T>();
 
             if (!_instance)
             {
                 GameObject gObj = GameObject.Find("DontDestroy");
-                _instance = gObj.AddComponent<T>();
+                _instance = gObj?.AddComponent<T>();
             }
         }
 
