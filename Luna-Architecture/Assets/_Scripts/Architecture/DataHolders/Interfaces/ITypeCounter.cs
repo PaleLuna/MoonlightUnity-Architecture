@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public interface ITypeCounter<T>
@@ -10,4 +11,7 @@ public interface ITypeCounter<T>
     public int CheckCount<TP>() where TP : T;
 
     public void RemoveEmpty();
+
+    public void ForEach(Action<T> action);
+    public void ForEach(Action<ItemHolder<T>> action);
 }

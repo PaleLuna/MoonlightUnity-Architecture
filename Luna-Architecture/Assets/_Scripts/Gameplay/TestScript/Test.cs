@@ -35,7 +35,9 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
         _itemCounter.AddItem(new Rock());
         _itemCounter.AddItem(new Stick(),3);
 
+
         print(_itemCounter);
+        _itemCounter.ForEach(item => print(item.GetName()));
 
         //Тест на удаление
         _itemCounter.PopItems<Apple>(4);

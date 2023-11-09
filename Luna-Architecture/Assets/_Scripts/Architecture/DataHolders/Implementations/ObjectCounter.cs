@@ -102,14 +102,22 @@ public class ObjectCounter<T> : ITypeCounter<T>
     public override string ToString()
     {
         string res = new string("");
-        List<ItemHolder<T>> itemHolders = new List<ItemHolder<T>>(_itemMap.Values);
-
-        foreach (ItemHolder<T> item in itemHolders)
-        {
-            res += $"{item.item.GetType()} : {item.Count}\n";
-        }
+        ForEach((ItemHolder<T> item) => res += $"{item.item.GetType()} : {item.Count}\n");
 
         return res;
+    }
+
+    public void ForEach(Action<T> action)
+    {
+        List<ItemHolder<T>> items = new List<ItemHolder<T>>(_itemMap.Values);
+
+        items.ForEach(item => action.Invoke(item.item));
+    }
+    public void ForEach(Action<ItemHolder<T>> action)
+    {
+        List<ItemHolder<T>> items = new List<ItemHolder<T>>(_itemMap.Values);
+
+        items.ForEach(item => action.Invoke(item));
     }
 }
 
