@@ -1,2 +1,2 @@
-# Star-Wings-Remastered
-Restarting my first project
+# Luna-Architecture
+Архитектура собственной разработки
