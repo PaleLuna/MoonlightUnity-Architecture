@@ -73,7 +73,6 @@ namespace PaleLuna.Attributes
             if (mono)
                 result = mono.GetComponent(reqType) != null;
 
-            Debug.Log(result);
             return result;
         }
 

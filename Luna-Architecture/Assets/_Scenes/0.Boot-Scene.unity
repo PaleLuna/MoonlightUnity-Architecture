@@ -259,7 +259,6 @@ MonoBehaviour:
   _nextScene: 1
   _startables:
   - {fileID: 1124190940}
-
 --- !u!1 &926504348
 GameObject:
   m_ObjectHideFlags: 0
