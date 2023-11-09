@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Test : MonoBehaviour, IUpdatable, IStartable
 {
-    private ITypeCounter<Item> _itemCounter;
+    private ObjectCounter<Item> _itemCounter;
 
     public void OnStart()
     {
@@ -57,6 +57,37 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
         }
 
         print(_itemCounter.PopItems<Apple>().EatApple());
+
+        print(_itemCounter.Pick<Apple>().EatApple());
+
+        print(_itemCounter.PickHolder<Apple>().item.EatApple());
+
+        try
+        {
+            print(_itemCounter.PopItems<Stick>());
+        }
+        catch (NullReferenceException ex)
+        {
+            print(ex.Message);
+        }
+
+        try
+        {
+            print(_itemCounter.Pick<Stick>());
+        }
+        catch (NullReferenceException ex)
+        {
+            print(ex.Message);
+        }
+
+        try
+        {
+            print(_itemCounter.PickHolder<Stick>().Count);
+        }
+        catch (NullReferenceException ex)
+        {
+            print(ex.Message);
+        }
 
     }
 

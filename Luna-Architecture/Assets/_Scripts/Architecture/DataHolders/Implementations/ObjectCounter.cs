@@ -29,6 +29,29 @@ public class ObjectCounter<T> : ITypeCounter<T>
         CheckItem(key);
         return _itemMap[key].Count;
     }
+    public TP Pick<TP>() where TP : T
+    {
+        Type key = typeof(TP);
+        CheckItem(key);
+
+        ItemHolder<T> itemHolder = _itemMap[key];
+
+        if (itemHolder.Count <= 0) return default(TP);
+
+        return (TP)itemHolder.item;
+    }
+    public ItemHolder<TP> PickHolder<TP>() where TP : T
+    {
+        Type key = typeof(TP);
+        CheckItem(key);
+
+        ItemHolder<T> itemHolder = _itemMap[key];
+        ItemHolder<TP> otherHolder = new ItemHolder<TP>(
+            (TP)itemHolder.item, 
+            itemHolder.Count);
+
+        return otherHolder;
+    }
 
     public TP PopItems<TP>(int count = 1) where TP : T
     {
@@ -39,7 +62,7 @@ public class ObjectCounter<T> : ITypeCounter<T>
 
         itemHolder.Count -= count;
 
-        return (TP)itemHolder.val;
+        return (TP)itemHolder.item;
     }
 
     private void AddToItem(Type key, int count)
@@ -70,7 +93,7 @@ public class ObjectCounter<T> : ITypeCounter<T>
 
         foreach (ItemHolder<T> item in itemHolders)
         {
-            res += $"{item.val.GetType()} : {item.Count}\n";
+            res += $"{item.item.GetType()} : {item.Count}\n";
         }
 
         return res;
@@ -83,9 +106,9 @@ public class ObjectCounter<T> : ITypeCounter<T>
     }
 }
 
-class ItemHolder<T>
+public class ItemHolder<T>
 {
-    public T val;
+    public T item;
     private int count;
 
     public int Count { 
@@ -93,9 +116,9 @@ class ItemHolder<T>
         set => count = value < 0 ? 0 : value;
     }
 
-    public ItemHolder(T val, int count)
+    public ItemHolder(T item, int count)
     {
-        this.val = val;
+        this.item = item;
         this.count = count;
     }
 }
