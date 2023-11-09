@@ -7,25 +7,27 @@ using Object = UnityEngine.Object;
 namespace PaleLuna.Attributes
 {
     [CustomPropertyDrawer(typeof(RequireInterface))]
-
     public class RequireInterfaceDrawer : PropertyDrawer
     {
+        private Type _reqType;
+        private RequireInterface _reqIAttribute;
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            _reqIAttribute = attribute as RequireInterface;
+            _reqType = _reqIAttribute.RequireType;
+            
             if (!IsFieldMonoBehaviour)
             {
                 DrawError(position);
                 return;
             }
+            
+            CheckDragAndDrop(position, _reqType);
 
-            RequireInterface reqIAttribute = attribute as RequireInterface;
-            Type reqType = reqIAttribute.RequireType;
+            CheckValues(property, _reqType);
 
-            CheckDragAndDrop(position, reqType);
-
-            CheckValues(property, reqType);
-
-            DrawObjectField(property, label, position, reqIAttribute.allowSceneObject);
+            DrawObjectField(property, label, position, _reqIAttribute.allowSceneObject);
         }
 
         private void CheckValues(SerializedProperty property, Type reqType)
@@ -69,8 +71,9 @@ namespace PaleLuna.Attributes
             MonoBehaviour mono = objectReference as MonoBehaviour;
 
             if (mono)
-                result = mono.GetComponent(reqType);
+                result = mono.GetComponent(reqType) != null;
 
+            Debug.Log(result);
             return result;
         }
 

@@ -257,7 +257,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextScene: 1
+<<<<<<< HEAD
   _startables: []
+=======
+  _startables:
+  - {fileID: 1124190940}
+>>>>>>> 2570ee2c5ec017ba0c20149bedc64d3be3ffee6d
 --- !u!1 &926504348
 GameObject:
   m_ObjectHideFlags: 0
