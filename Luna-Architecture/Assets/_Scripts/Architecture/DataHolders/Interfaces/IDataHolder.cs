@@ -19,11 +19,14 @@ public interface IDataHolder<T>
     public void Clear();
 
     void ForEach(Action<T> action);
+
+    T[] ToArray();
 }
 
 public enum ListRegistrationType
 {
     AddToEnd,
     AddToStart,
-    Replace
+    Replace,
+    MergeToEndUnion
 }

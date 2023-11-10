@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using PaleLuna.Attributes;
@@ -17,7 +17,8 @@ namespace PaleLuna.Architecture
         [SerializeField, Min(0)] private int _nextScene = 1;
 
         [Header("Startables")] [SerializeReference, RequireInterface(typeof(IStartable))]
-        private List<MonoBehaviour> _startables;
+        private List<MonoBehaviour> _startablesMono;
+        private DataHolder<IStartable> _startables;
 
         private GameObject _dontDestroyObject;
         private List<IInitializer> _initializersList = new List<IInitializer>(DEFAULT_LIST_CAPACITY);
@@ -29,7 +30,7 @@ namespace PaleLuna.Architecture
         private void OnValidate() => 
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
 
-        private void Start() => 
+        private void Start() =>
            _ = BootGame();
         
         #endregion
@@ -70,9 +71,12 @@ namespace PaleLuna.Architecture
                 GetComponent<GameController>()
                 .stateHolder
                 .ChangeState<PlayState>();
-            
+
+            CompileAllComponents();
             StartAllComponents();
         }
+
+        
 
         #region Auxiliary methods
 
@@ -83,8 +87,17 @@ namespace PaleLuna.Architecture
         private void StartAllInitializers() => 
             _initializersList.ForEach(initializer => initializer.StartInit());
 
-        private void StartAllComponents() => 
-            _startables.ForEach(behaviour => ((IStartable)behaviour).OnStart());
+        private void CompileAllComponents()
+        {
+            _startables = new DataHolder<IStartable>(_startablesMono.Count);
+            _startablesMono.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
+
+            _startables.Registration(
+                Searcher.ListOfAllByInterface<IStartable>(item => item.IsStarted == false), 
+                ListRegistrationType.MergeToEndUnion);
+        }
+        private void StartAllComponents() =>
+            _startables.ForEach(item => item.OnStart());
 
         private void JumpToScene(int sceneNum = -1) =>
             SceneManager.LoadScene(
