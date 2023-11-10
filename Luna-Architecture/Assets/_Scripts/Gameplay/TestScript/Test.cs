@@ -3,13 +3,22 @@ using UnityEngine;
 
 public class Test : MonoBehaviour, IUpdatable, IStartable
 {
+    [SerializeField] private string _name;
     private ObjectCounter<Item> _itemCounter;
+
+    private bool _isStartable = false;
+
+    public bool IsStarted => _isStartable;
 
     public void OnStart()
     {
-        //ServiceLocator.Instance.Get<GameController>()?.updatablesHolder.Registration(this);
-        TestObjectCounter();
+        if (_isStartable) return;
 
+        //ServiceLocator.Instance.Get<GameController>()?.updatablesHolder.Registration(this);
+        //TestObjectCounter();
+        print(_name);
+
+        _isStartable = true;
     }
         
 

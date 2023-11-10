@@ -7,14 +7,22 @@ public class GameController : MonoBehaviour, IService, IStartable
     public DataHolder<IStartable> startableHolder { get; private set; }
     public UpdatablesHolder updatablesHolder { get; private set; }
     public StateHolder<GameStateBase> stateHolder { get; private set; }
+
+    private bool _isStarted = false;
+
+    public bool IsStarted => _isStarted;
     
     public void OnStart()
     {
+        if (_isStarted) return;
+
         stateHolder = new StateHolder<GameStateBase>();
         
         updatablesHolder = new UpdatablesHolder();
         pausablesHolder = new DataHolder<IPausable>();
         startableHolder = new DataHolder<IStartable>();
+
+        _isStarted = true;
     }
     
     #region MonoEvents

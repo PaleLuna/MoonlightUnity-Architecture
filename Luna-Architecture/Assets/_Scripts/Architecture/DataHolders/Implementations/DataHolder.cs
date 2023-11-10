@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Events;
 
 public class DataHolder<T> : IDataHolder<T>
@@ -20,6 +21,10 @@ public class DataHolder<T> : IDataHolder<T>
         else
             _itemsList = new List<T>(startCapacity);
     }
+    public DataHolder(List<T> list)
+    {
+        ReplaceList(list);
+    }
 
     #region Registration
 
@@ -35,6 +40,9 @@ public class DataHolder<T> : IDataHolder<T>
                 break;
             case ListRegistrationType.Replace:
                 ReplaceList(otherItems);
+                break;
+            case ListRegistrationType.MergeToEndUnion:
+                MergeToEndUnion(otherItems);
                 break;
             default:
                 ReplaceList(otherItems);
@@ -65,7 +73,7 @@ public class DataHolder<T> : IDataHolder<T>
 
     public T At(int index)
     {
-        T res = default(T);
+        T res = default;
 
         if (index >= 0 && index < _itemsList.Count)
             res = _itemsList[index];
@@ -103,6 +111,16 @@ public class DataHolder<T> : IDataHolder<T>
         otherList.AddRange(_itemsList);
         
         ReplaceList(otherList);
+    }
+
+    private void MergeToEndUnion(List<T> other)
+    {
+        _itemsList = _itemsList.Union(other).ToList();
+    }
+
+    public T[] ToArray()
+    {
+        return _itemsList.ToArray();
     }
 
     #endregion
