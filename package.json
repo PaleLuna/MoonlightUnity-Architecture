@@ -1,0 +1,21 @@
+{
+  "name": "com.TwilightMoonGames.MoonlightUnityArchitecture",
+  "version": "0.0.1",
+  "displayName": "MoonlightUnity Architecture",
+  "description": "Basic architecture for writing games",
+  "unity": "2019.1",
+  "dependencies": { },
+  "samples": [
+    {
+      "displayName": "MoonlightUnity Scenes",
+      "description": "Примеры",
+      "path": "Example~/MoonlightUnity Scenes"
+    }
+  ],
+  "author": {
+    "name": "PaleLuna",
+    "email": "palelunadeveloper@gmail.com",
+    "url": "https://t.me/IPaleLunaI"
+  }
+  
+}
