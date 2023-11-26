@@ -30,6 +30,7 @@ namespace PaleLuna.Architecture
         protected override async UniTaskVoid Setup()
         {
             _dontDestroyObject = new GameObject("DontDestroy");
+            DontDestroyOnLoad(_dontDestroyObject);
             
             await UniTask.Yield();
 
