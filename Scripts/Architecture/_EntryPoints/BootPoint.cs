@@ -49,6 +49,8 @@ namespace PaleLuna.Architecture
 
             CompileAllComponents();
             StartAllComponents();
+            
+            JumpToScene();
         }
         
         #region Auxiliary methods
