@@ -1,4 +1,8 @@
 using System;
+using PaleLuna.DataHolder;
+using PaleLuna.DataHolder.Counter;
+using PaleLuna.Architecture.GameComponent;
+using PaleLuna.Architecture.Controllers;
 using UnityEngine;
 
 public class Test : MonoBehaviour, IUpdatable, IStartable
@@ -14,8 +18,6 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
     {
         if (_isStartable) return;
 
-        //ServiceLocator.Instance.Get<GameController>()?.updatablesHolder.Registration(this);
-        //TestObjectCounter();
         print(_name);
 
         _isStartable = true;

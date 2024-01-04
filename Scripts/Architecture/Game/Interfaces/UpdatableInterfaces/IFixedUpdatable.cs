@@ -1,4 +1,18 @@
-﻿public interface IFixedUpdatable : IGameComponent
+﻿namespace PaleLuna.Architecture.GameComponent
 {
-    void FixedFrameRun();
+    /**
+ * @brief Интерфейс для компонентов игры, которые должны выполнять обновление в каждом фиксированном кадре.
+ *
+ * IFixedUpdatable представляет интерфейс для компонентов игры, которые должны выполнять свои действия в каждом фиксированном кадре.
+ * Реализующие этот интерфейс компоненты должны предоставить реализацию метода FixedFrameRun.
+ */
+    public interface IFixedUpdatable : IGameComponent
+    {
+        /**
+         * @brief Метод, вызываемый в каждом фиксированном кадре.
+         *
+         * Метод FixedFrameRun вызывается в каждом фиксированном кадре, и компонент должен выполнить свои действия в этот момент времени.
+         */
+        void FixedFrameRun();
+    }
 }

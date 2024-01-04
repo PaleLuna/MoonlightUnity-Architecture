@@ -1,48 +1,108 @@
-﻿using _Scripts.Other.Patterns.StatePattern;
+﻿using PaleLuna.Architecture.GameComponent;
+using PaleLuna.Architecture.Services;
+using PaleLuna.DataHolder;
+using PaleLuna.DataHolder.Updatables;
+using PaleLuna.Patterns.State;
+using PaleLuna.Patterns.State.Game;
 using UnityEngine;
 
-public class GameController : MonoBehaviour, IService, IStartable
+namespace PaleLuna.Architecture.Controllers
 {
-    public DataHolder<IPausable> pausablesHolder { get; private set; }
-    public DataHolder<IStartable> startableHolder { get; private set; }
-    public UpdatablesHolder updatablesHolder { get; private set; }
-    public StateHolder<GameStateBase> stateHolder { get; private set; }
-
-    private bool _isStarted = false;
-
-    public bool IsStarted => _isStarted;
-    
-    public void OnStart()
+    /**
+     * @brief Класс GameController управляет различными аспектами игры.
+     * 
+     * GameController является главным контроллером игры, ответственным за управление обновлением, паузой и состояниями игры.
+     * Реализует интерфейсы IService и IStartable, что позволяет его использование в качестве сервиса и компонента, который может быть инициализирован при старте.
+     */
+    public class GameController : MonoBehaviour, IService, IStartable
     {
-        if (_isStarted) return;
+        /**
+        * @brief Флаг, указывающий, был ли GameController успешно инициализирован.
+        */
+        private bool _isStarted;
 
-        stateHolder = new StateHolder<GameStateBase>();
-        
-        updatablesHolder = new UpdatablesHolder();
-        pausablesHolder = new DataHolder<IPausable>();
-        startableHolder = new DataHolder<IStartable>();
+        /**
+        * @brief Хранилище компонентов, поддерживающих паузу.
+        */
+        public DataHolder<IPausable> pausablesHolder { get; private set; }
 
-        _isStarted = true;
+        /**
+         * @brief Хранилище компонентов, поддерживающих старт.
+         */
+        public DataHolder<IStartable> startableHolder { get; private set; }
+
+        /**
+        * @brief Объект для хранения и управления обновляемыми компонентами.
+        */
+        public UpdatablesHolder updatablesHolder { get; private set; }
+
+        /**
+         * @brief Хранилище состояний игры.
+         */
+        public StateHolder<GameStateBase> stateHolder { get; private set; }
+
+        /**
+         * @brief Получает значение, указывающее, был ли GameController успешно инициализирован.
+         */
+        public bool IsStarted => _isStarted;
+
+        /**
+         * @brief Метод, вызываемый при старте GameController.
+         * 
+         * Метод OnStart инициализирует GameController, создавая необходимые хранилища и объекты для управления состоянием игры.
+         */
+        public void OnStart()
+        {
+            if (_isStarted) return;
+
+            stateHolder = new StateHolder<GameStateBase>();
+
+            updatablesHolder = new UpdatablesHolder();
+            pausablesHolder = new DataHolder<IPausable>();
+            startableHolder = new DataHolder<IStartable>();
+
+            _isStarted = true;
+        }
+
+
+        #region MonoEvents
+
+        /**
+         * @brief Метод, вызываемый в каждом кадре для обновления обновляемых компонентов.
+         */
+        private void Update()
+        {
+            updatablesHolder.everyFrameUpdatablesHolder
+                .ForEach(updatable => updatable.EveryFrameRun());
+        }
+
+        /**
+         * @brief Метод, вызываемый в каждом FixedUpdate для обновления компонентов, требующих фиксированную частоту обновления.
+         */
+        private void FixedUpdate()
+        {
+            updatablesHolder.fixedUpdatablesHolder
+                .ForEach(updatable => updatable.FixedFrameRun());
+        }
+
+        /**
+         * @brief Метод, вызываемый в каждом LateUpdate для обновления компонентов, требующих обновление после Update.
+         */
+        private void LateUpdate()
+        {
+            updatablesHolder.lateUpdatablesHolder
+                .ForEach(updatable => updatable.LateUpdateRun());
+        }
+
+        /**
+         * @brief Метод, вызываемый в каждом такте игрового времени для обновления компонентов с использованием метода EveryTickRun.
+         */
+        private void Tick()
+        {
+            updatablesHolder.tickUpdatableHolder
+                .ForEach(updatable => updatable.EveryTickRun());
+        }
+
+        #endregion
     }
-    
-    #region MonoEvents
-    private void Update() =>
-        updatablesHolder.everyFrameUpdatablesHolder
-            .ForEach(updatable => updatable.EveryFrameRun());
-
-    private void FixedUpdate() => 
-        updatablesHolder.fixedUpdatablesHolder
-            .ForEach(updatable => updatable.FixedFrameRun());
-
-    private void LateUpdate() =>
-        updatablesHolder.lateUpdatablesHolder
-            .ForEach(updatable => updatable.LateUpdateRun());
-
-    private void Tick() =>
-        updatablesHolder.tickUpdatableHolder
-            .ForEach(updatable => updatable.EveryTickRun());
-
-    #endregion
-
-    
 }
