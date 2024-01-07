@@ -45,14 +45,14 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Переопределите этот метод в подклассе, чтобы добавить свои собственные инициализаторы.
          */
-        protected abstract void FillInitializers();
+        protected virtual void FillInitializers(){}
         
         /**
        * @brief Абстрактный метод для запуска всех инициализаторов.
        *
        * Переопределите этот метод в подклассе, чтобы определить, какие инициализаторы запускать.
        */
-        protected abstract void StartAllInitializers();
+        protected virtual void StartAllInitializers(){}
         
         /**
         * @brief Метод для компиляции всех компонентов IStartable из списка _startablesMono.

@@ -3,6 +3,7 @@ using PaleLuna.DataHolder;
 using PaleLuna.Patterns.State.Game;
 using PaleLuna.Architecture.Controllers;
 using PaleLuna.Architecture.Initializer;
+using PaleLuna.Architecture.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -64,6 +65,8 @@ namespace PaleLuna.Architecture.EntryPoint
 
             _ = _dontDestroyObject.AddComponent<ServiceLocator>();
 
+            ServiceLocator.Instance.Registarion<SceneService>(new SceneService());
+
             FillInitializers();
             StartAllInitializers();
 
@@ -104,9 +107,19 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Если параметр sceneNum не указан (по умолчанию -1), используется значение _nextScene.
          */
-        private void JumpToScene(int sceneNum = -1) =>
-            SceneManager.LoadScene(
-                sceneNum < 0 ? _nextScene : sceneNum);
+        private void JumpToScene(int sceneNum = -1)
+        {
+            SceneService sceneService = ServiceLocator.Instance.Get<SceneService>();
+            SceneBaggage sceneBaggage = new SceneBaggage();
+            sceneBaggage
+                .SetInt("MyInt", 1)
+                .SetFloat("MyFloat", 23.2F)
+                .SetBool("MyBool", true);
+            
+            
+            sceneService.SetBaggage(sceneBaggage)
+                .LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
+        }
 
         #endregion
     }
