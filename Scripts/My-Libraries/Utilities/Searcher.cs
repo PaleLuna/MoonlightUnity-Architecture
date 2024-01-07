@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PaleLuna.DataHolder;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

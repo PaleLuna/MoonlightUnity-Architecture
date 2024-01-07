@@ -1,5 +1,24 @@
-﻿public interface IStartable : IGameComponent
+﻿namespace PaleLuna.Architecture.GameComponent
 {
-    public bool IsStarted { get; }
-    void OnStart();
+    /**
+ * @brief Интерфейс для компонентов игры, которые могут быть инициализированы при запуске.
+ *
+ * IStartable представляет интерфейс для компонентов игры, которые могут выполнять свои действия при старте игры.
+ * Реализующие этот интерфейс компоненты должны предоставить реализацию метода OnStart и свойства IsStarted.
+ */
+    public interface IStartable : IGameComponent
+    {
+        /**
+         * @brief Получает значение, указывающее, был ли компонент запущен.
+         *
+         * Свойство IsStarted возвращает true, если компонент был успешно запущен, и false в противном случае.
+         */
+        public bool IsStarted { get; }
+        /**
+         * @brief Метод, вызываемый при старте компонента.
+         *
+         * Метод OnStart вызывается при старте компонента, и компонент должен выполнить свои действия в этот момент времени.
+         */
+        void OnStart();
+    }
 }

@@ -1,7 +1,32 @@
-﻿public class StartState : GameStateBase
+﻿using PaleLuna.Architecture.Controllers;
+
+namespace PaleLuna.Patterns.State.Game
 {
-    public StartState(GameController context) : base(context) { }
-    public override void StateStart() =>
-        _context.startableHolder
-            .ForEach(startable => startable.OnStart());
+    /**
+ * @brief Состояние начала в игре.
+ *
+ * StartState представляет состояние начала в игре. При входе в это состояние вызывается метод OnStart для всех объектов,
+ * зарегистрированных в startableHolder контроллера игры.
+ */
+    public class StartState : GameStateBase
+    {
+        /**
+         * @brief Конструктор класса.
+         *
+         * Инициализирует объект StartState с заданным контекстом игры.
+         *
+         * @param context Объект GameController, представляющий текущий контекст игры.
+         */
+        public StartState(GameController context) : base(context)
+        {
+        }
+
+        /**
+       * @brief Метод, вызываемый при начале состояния.
+       *
+       */
+        public override void StateStart() =>
+            _context.startableHolder
+                .ForEach(startable => startable.OnStart());
+    }
 }

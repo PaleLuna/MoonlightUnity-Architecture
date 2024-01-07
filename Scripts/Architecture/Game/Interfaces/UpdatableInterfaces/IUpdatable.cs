@@ -1,4 +1,18 @@
-﻿public interface IUpdatable : IGameComponent
+﻿namespace PaleLuna.Architecture.GameComponent
 {
-    void EveryFrameRun();
+    /**
+ * @brief Интерфейс для компонентов игры, которые должны выполнять обновление в каждом кадре.
+ *
+ * IUpdatable представляет интерфейс для компонентов игры, которые должны выполнять свои действия в каждом кадре.
+ * Реализующие этот интерфейс компоненты должны предоставить реализацию метода EveryFrameRun.
+ */
+    public interface IUpdatable : IGameComponent
+    {
+        /**
+         * @brief Метод, вызываемый в каждом кадре.
+         *
+         * Метод EveryFrameRun вызывается в каждом кадре, и компонент должен выполнить свои действия в этот момент времени.
+         */
+        void EveryFrameRun();
+    }
 }

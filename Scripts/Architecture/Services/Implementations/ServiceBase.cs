@@ -1,6 +1,13 @@
-﻿namespace _Scripts.Architecture.Services.Implementations
+﻿namespace PaleLuna.Architecture.Services
 {
-    public class ServiceBase
+    /**
+     * @brief Базовый класс ServiceBase представляет собой основу для создания сервисов в архитектуре приложения.
+     *
+     * ServiceBase может использоваться в качестве базового класса для создания конкретных сервисов, предоставляя
+     * общую структуру и функциональность. Расширяйте этот класс ваши конкретные потребности, добавляя
+     * необходимые методы и свойства для ваших сервисов.
+     */
+    public class ServiceBase : IService
     {
         
     }
