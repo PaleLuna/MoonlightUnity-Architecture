@@ -9,6 +9,8 @@ namespace MoonlightUnity_Architecture.Scripts.TestScript
     {
         protected override void Start()
         {
+            _ = Setup();
+
             print("Test point");
             SceneBaggage sceneBaggage = ServiceLocator.Instance.Get<SceneService>().GetBaggage();
 
