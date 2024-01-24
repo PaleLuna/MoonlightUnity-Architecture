@@ -38,15 +38,7 @@ namespace PaleLuna.Architecture.EntryPoint
          */
         private void OnValidate() => 
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
-
-        /**
-        * @brief Метод, вызываемый при старте объекта в сцене.
-        *
-        * Асинхронно запускает метод Setup для инициализации и запуска игры.
-        */
-        private void Start() =>
-           _ = Setup();
-        
+     
         #endregion
         
         /**
@@ -56,32 +48,22 @@ namespace PaleLuna.Architecture.EntryPoint
         * Инициализирует ServiceLocator, заполняет и запускает инициализаторы, загружает сервисы,
         * изменяет состояние игры, компилирует и запускает компоненты IStartable, переходит к следующей сцене.
         */
-        protected override async UniTaskVoid Setup()
+        protected override async UniTask Setup()
         {
             _dontDestroyObject = new GameObject("DontDestroy");
             DontDestroyOnLoad(_dontDestroyObject);
             
-            await UniTask.Yield();
-
             _ = _dontDestroyObject.AddComponent<ServiceLocator>();
 
             ServiceLocator.Instance.Registarion<SceneService>(new SceneService());
 
-            FillInitializers();
-            StartAllInitializers();
+            await base.Setup();
 
-            await LoadAllServices();
-
-            await UniTask.Yield();
-            
             ServiceLocator.Instance.
                 GetComponent<GameController>()
                 .stateHolder
                 .ChangeState<PlayState>();
 
-            CompileAllComponents();
-            StartAllComponents();
-            
             JumpToScene();
         }
         
@@ -97,30 +79,17 @@ namespace PaleLuna.Architecture.EntryPoint
                 .Add(new GameControllerInitializer(_dontDestroyObject));
 
         /**
-        * @brief Запускает все инициализаторы.
-        */
-        protected override void StartAllInitializers() => 
-            _initializersList.ForEach(initializer => initializer.StartInit());
-
-        /**
          * @brief Метод для перехода к указанной сцене.
          *
          * Если параметр sceneNum не указан (по умолчанию -1), используется значение _nextScene.
          */
-        private void JumpToScene(int sceneNum = -1)
+        protected void JumpToScene(int sceneNum = -1)
         {
             SceneService sceneService = ServiceLocator.Instance.Get<SceneService>();
-            SceneBaggage sceneBaggage = new SceneBaggage();
-            sceneBaggage
-                .SetInt("MyInt", 1)
-                .SetFloat("MyFloat", 23.2F)
-                .SetBool("MyBool", true);
             
-            
-            sceneService.SetBaggage(sceneBaggage)
+            sceneService
                 .LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
         }
-
         #endregion
     }
 }

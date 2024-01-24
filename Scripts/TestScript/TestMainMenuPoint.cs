@@ -7,17 +7,18 @@ namespace MoonlightUnity_Architecture.Scripts.TestScript
 {
     public class TestMainMenuPoint : EntryPoint
     {
-        private void Start()
+        protected override void Start()
         {
+            print("Test point");
             SceneBaggage sceneBaggage = ServiceLocator.Instance.Get<SceneService>().GetBaggage();
-            
-            
+
+            if (sceneBaggage == null) return;
+
             print(sceneBaggage.GetFloat("MyFloat"));
             print(sceneBaggage.GetInt("MyInt"));
             print(sceneBaggage.GetBool("MyBool"));
-            
-            print(sceneBaggage.GetInt("MyFloat"));
-
         }
+
+        protected override void FillInitializers(){ }
     }
 }

@@ -18,7 +18,6 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
     {
         if (_isStartable) return;
 
-        print(_name);
 
         _isStartable = true;
     }

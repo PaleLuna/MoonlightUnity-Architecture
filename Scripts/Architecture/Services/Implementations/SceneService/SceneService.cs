@@ -4,7 +4,7 @@ namespace PaleLuna.Architecture.Services
 {
     public class SceneService : IService
     {
-        private SceneBaggage _sceneBaggage;
+        private SceneBaggage _sceneBaggage = null;
         
         public void LoadScene(int sceneNum)
         {

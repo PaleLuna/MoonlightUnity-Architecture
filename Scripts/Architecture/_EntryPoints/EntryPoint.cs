@@ -33,26 +33,43 @@ namespace PaleLuna.Architecture.EntryPoint
         /** @brief Коллекция объектов IStartable для управления запуском. */
         private DataHolder<IStartable> _startables;
 
+        protected virtual void Start()
+        {
+            print("Run Setup");
+            _ = Setup();
+        }
+
         /**
        * @brief Метод для настройки объекта EntryPoint.
        *
-       * Этот метод вызывается при инициализации объекта EntryPoint и выполняет загрузку всех сервисов.
+       * Этот метод вызывается при инициализации объекта EntryPoint и выполняет поиск всех компонентов.
        */
-        protected virtual async UniTaskVoid Setup() => await LoadAllServices();
+        protected virtual async UniTask Setup() {
+
+            FillInitializers();
+            StartAllInitializers();
+
+            await LoadAllServices();
+
+            CompileAllComponents();
+            StartAllComponents();
+        }
 
         /**
          * @brief Абстрактный метод для заполнения списка инициализаторов.
          *
          * Переопределите этот метод в подклассе, чтобы добавить свои собственные инициализаторы.
          */
-        protected virtual void FillInitializers(){}
+        protected abstract void FillInitializers();
         
         /**
        * @brief Абстрактный метод для запуска всех инициализаторов.
        *
        * Переопределите этот метод в подклассе, чтобы определить, какие инициализаторы запускать.
        */
-        protected virtual void StartAllInitializers(){}
+        protected virtual void StartAllInitializers(){
+            _initializersList.ForEach(initializer => initializer.StartInit());
+        }
         
         /**
         * @brief Метод для компиляции всех компонентов IStartable из списка _startablesMono.

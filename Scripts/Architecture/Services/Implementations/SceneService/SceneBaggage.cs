@@ -15,13 +15,15 @@ namespace PaleLuna.Architecture.Services
         public SceneBaggage SetFloat(string key, float num)
         {
             _baggages.Add(key, new FloatBaggage(num));
-            return this;
+            return this ;
         }
         public SceneBaggage SetBool(string key, bool val)
         {
             _baggages.Add(key, new BoolBaggage(val));
             return this;
         }
+
+        
 
         public int GetInt(string key)
         {
