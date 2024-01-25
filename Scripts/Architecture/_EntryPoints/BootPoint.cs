@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
-using PaleLuna.DataHolder;
-using PaleLuna.Patterns.State.Game;
 using PaleLuna.Architecture.Controllers;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Architecture.Services;
+using PaleLuna.DataHolder;
+using PaleLuna.Patterns.State.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,7 +22,8 @@ namespace PaleLuna.Architecture.EntryPoint
 
         /** @brief Параметры следующей сцены. */
         [Header("Next scene params")]
-        [SerializeField, Min(0)] private int _nextScene = 1;
+        [SerializeField, Min(0)]
+        private int _nextScene = 1;
 
         /** @brief Объект, который не будет уничтожен при переходе между сценами. */
         private GameObject _dontDestroyObject;
@@ -36,11 +37,11 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Ограничивает значение _nextScene от 0 до общего количества сцен в проекте.
          */
-        private void OnValidate() => 
+        private void OnValidate() =>
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
-     
+
         #endregion
-        
+
         /**
         * @brief Асинхронный метод для настройки и запуска игры.
         *
@@ -52,21 +53,20 @@ namespace PaleLuna.Architecture.EntryPoint
         {
             _dontDestroyObject = new GameObject("DontDestroy");
             DontDestroyOnLoad(_dontDestroyObject);
-            
+
             _ = _dontDestroyObject.AddComponent<ServiceLocator>();
 
             ServiceLocator.Instance.Registarion<SceneService>(new SceneService());
 
             await base.Setup();
 
-            ServiceLocator.Instance.
-                GetComponent<GameController>()
-                .stateHolder
-                .ChangeState<PlayState>();
+            ServiceLocator
+                .Instance.GetComponent<GameController>()
+                .stateHolder.ChangeState<PlayState>();
 
             JumpToScene();
         }
-        
+
         #region Auxiliary methods
 
         /**
@@ -75,8 +75,7 @@ namespace PaleLuna.Architecture.EntryPoint
          * Добавляет GameControllerIInitializer в список инициализаторов.
          */
         protected override void FillInitializers() =>
-            _initializersList
-                .Add(new GameControllerInitializer(_dontDestroyObject));
+            _initializersList.Add(new GameControllerInitializer(_dontDestroyObject));
 
         /**
          * @brief Метод для перехода к указанной сцене.
@@ -86,9 +85,8 @@ namespace PaleLuna.Architecture.EntryPoint
         protected void JumpToScene(int sceneNum = -1)
         {
             SceneService sceneService = ServiceLocator.Instance.Get<SceneService>();
-            
-            sceneService
-                .LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
+
+            sceneService.LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
         }
         #endregion
     }
