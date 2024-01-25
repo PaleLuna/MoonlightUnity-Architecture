@@ -56,7 +56,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
             _ = _dontDestroyObject.AddComponent<ServiceLocator>();
 
-            ServiceLocator.Instance.Registarion<SceneService>(new SceneService());
+            ServiceLocator.Instance.Registarion<SceneLoaderService>(new SceneLoaderService());
 
             await base.Setup();
 
@@ -84,7 +84,7 @@ namespace PaleLuna.Architecture.EntryPoint
          */
         protected void JumpToScene(int sceneNum = -1)
         {
-            SceneService sceneService = ServiceLocator.Instance.Get<SceneService>();
+            SceneLoaderService sceneService = ServiceLocator.Instance.Get<SceneLoaderService>();
 
             sceneService.LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
         }

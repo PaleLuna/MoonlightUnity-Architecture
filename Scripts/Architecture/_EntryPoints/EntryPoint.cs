@@ -56,7 +56,7 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Переопределите этот метод в подклассе, чтобы добавить свои собственные инициализаторы.
          */
-        protected abstract void FillInitializers();
+        protected virtual void FillInitializers() { }
 
         /**
        * @brief Абстрактный метод для запуска всех инициализаторов.

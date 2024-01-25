@@ -12,7 +12,7 @@ namespace MoonlightUnity_Architecture.Scripts.TestScript
             _ = Setup();
 
             print("Test point");
-            SceneBaggage sceneBaggage = ServiceLocator.Instance.Get<SceneService>().GetBaggage();
+            SceneBaggage sceneBaggage = ServiceLocator.Instance.Get<SceneLoaderService>().GetBaggage();
 
             if (sceneBaggage == null) return;
 
