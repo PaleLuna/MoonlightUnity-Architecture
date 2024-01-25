@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using PaleLuna.DataHolder;
 using PaleLuna.Architecture.Controllers;
 using PaleLuna.Patterns.State.Game;
+using Services;
 using UnityEngine;
 
 namespace PaleLuna.Architecture.Initializer
@@ -24,6 +24,7 @@ namespace PaleLuna.Architecture.Initializer
          * @brief Объект GameController, который будет инициализирован.
          */
         private GameController _gameController;
+
         /**
        * @brief Родительский объект, к которому будет добавлен GameController.
        */
@@ -48,7 +49,7 @@ namespace PaleLuna.Architecture.Initializer
         {
             _parent = parent;
         }
-        
+
         /**
          * @brief Метод, запускающий инициализацию GameController.
          *
@@ -56,8 +57,8 @@ namespace PaleLuna.Architecture.Initializer
          */
         public void StartInit()
         {
-            if(_status != InitStatus.Shutdown) return;
-            
+            if (_status != InitStatus.Shutdown)
+                return;
 
             _status = InitStatus.Initialization;
 
@@ -76,7 +77,7 @@ namespace PaleLuna.Architecture.Initializer
             SetupStates();
             await UniTask.Yield(cancellationToken: token);
 
-            ServiceLocator.Instance.Registarion(_gameController);
+            ServiceManager.Instance.GlobalServices.Registarion(_gameController);
 
             _status = InitStatus.Done;
         }
@@ -89,24 +90,20 @@ namespace PaleLuna.Architecture.Initializer
             _gameController = _parent.AddComponent<GameController>();
             _gameController.OnStart();
         }
-        
+
         /**
          * @brief Метод устанавливает состояния в stateHolder GameController.
          */
         private void SetupStates()
         {
-            _gameController.stateHolder
-                .Registarion(new StartState(_gameController));
-            _gameController.stateHolder
-                .Registarion(new PlayState(_gameController));
-            _gameController.stateHolder
-                .Registarion(new PauseState(_gameController));
+            _gameController.stateHolder.Registarion(new StartState(_gameController));
+            _gameController.stateHolder.Registarion(new PlayState(_gameController));
+            _gameController.stateHolder.Registarion(new PauseState(_gameController));
         }
 
         /**
          * @brief Деструктор, который отменяет токен при уничтожении объекта.
          */
-        ~GameControllerInitializer() =>
-            _tokenSource.Cancel();
+        ~GameControllerInitializer() => _tokenSource.Cancel();
     }
 }

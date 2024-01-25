@@ -64,6 +64,21 @@ namespace PaleLuna.Architecture.Controllers
             _isStarted = true;
         }
 
+        #region Registration
+        public void Registatrion(IUpdatable component) 
+        {
+            updatablesHolder.Registration(component);
+        }
+        public void Registatrion(IFixedUpdatable component)
+        {
+            updatablesHolder.Registration(component);
+        }
+        public void Registatrion(ILateUpdatable component)
+        {
+            updatablesHolder.Registration(component);
+        }
+
+        #endregion
 
         #region MonoEvents
 

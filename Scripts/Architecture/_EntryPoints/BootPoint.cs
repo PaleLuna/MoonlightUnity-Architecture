@@ -1,8 +1,9 @@
 using Cysharp.Threading.Tasks;
-using PaleLuna.DataHolder;
-using PaleLuna.Patterns.State.Game;
 using PaleLuna.Architecture.Controllers;
 using PaleLuna.Architecture.Initializer;
+using PaleLuna.Architecture.Services;
+using PaleLuna.Patterns.State.Game;
+using Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,11 +22,13 @@ namespace PaleLuna.Architecture.EntryPoint
 
         /** @brief Параметры следующей сцены. */
         [Header("Next scene params")]
-        [SerializeField, Min(0)] private int _nextScene = 1;
+        [SerializeField, Min(0)]
+        private int _nextScene = 1;
 
         /** @brief Объект, который не будет уничтожен при переходе между сценами. */
         private GameObject _dontDestroyObject;
 
+        private ServiceLocator _globalServiceLocator = new ServiceLocator();
         #endregion
 
         #region Mono methods
@@ -35,19 +38,11 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Ограничивает значение _nextScene от 0 до общего количества сцен в проекте.
          */
-        private void OnValidate() => 
+        private void OnValidate() =>
             _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
 
-        /**
-        * @brief Метод, вызываемый при старте объекта в сцене.
-        *
-        * Асинхронно запускает метод Setup для инициализации и запуска игры.
-        */
-        private void Start() =>
-           _ = Setup();
-        
         #endregion
-        
+
         /**
         * @brief Асинхронный метод для настройки и запуска игры.
         *
@@ -55,33 +50,26 @@ namespace PaleLuna.Architecture.EntryPoint
         * Инициализирует ServiceLocator, заполняет и запускает инициализаторы, загружает сервисы,
         * изменяет состояние игры, компилирует и запускает компоненты IStartable, переходит к следующей сцене.
         */
-        protected override async UniTaskVoid Setup()
+        protected override async UniTask Setup()
         {
             _dontDestroyObject = new GameObject("DontDestroy");
             DontDestroyOnLoad(_dontDestroyObject);
-            
-            await UniTask.Yield();
 
-            _ = _dontDestroyObject.AddComponent<ServiceLocator>();
+            _ = _dontDestroyObject.AddComponent<ServiceManager>();
 
-            FillInitializers();
-            StartAllInitializers();
+            ServiceManager.Instance.GlobalServices = _globalServiceLocator;
+            _globalServiceLocator.Registarion<SceneLoaderService>(new SceneLoaderService());
 
-            await LoadAllServices();
 
-            await UniTask.Yield();
-            
-            ServiceLocator.Instance.
-                GetComponent<GameController>()
-                .stateHolder
-                .ChangeState<PlayState>();
+            await base.Setup();
 
-            CompileAllComponents();
-            StartAllComponents();
-            
+            _globalServiceLocator
+                .Get<GameController>()
+                .stateHolder.ChangeState<PlayState>();
+
             JumpToScene();
         }
-        
+
         #region Auxiliary methods
 
         /**
@@ -90,24 +78,19 @@ namespace PaleLuna.Architecture.EntryPoint
          * Добавляет GameControllerIInitializer в список инициализаторов.
          */
         protected override void FillInitializers() =>
-            _initializersList
-                .Add(new GameControllerInitializer(_dontDestroyObject));
-
-        /**
-        * @brief Запускает все инициализаторы.
-        */
-        protected override void StartAllInitializers() => 
-            _initializersList.ForEach(initializer => initializer.StartInit());
+            _initializersList.Add(new GameControllerInitializer(_dontDestroyObject));
 
         /**
          * @brief Метод для перехода к указанной сцене.
          *
          * Если параметр sceneNum не указан (по умолчанию -1), используется значение _nextScene.
          */
-        private void JumpToScene(int sceneNum = -1) =>
-            SceneManager.LoadScene(
-                sceneNum < 0 ? _nextScene : sceneNum);
+        protected void JumpToScene(int sceneNum = -1)
+        {
+            SceneLoaderService sceneService = _globalServiceLocator.Get<SceneLoaderService>();
 
+            sceneService.LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
+        }
         #endregion
     }
 }
