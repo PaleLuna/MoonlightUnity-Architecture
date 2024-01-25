@@ -8,7 +8,7 @@ using PaleLuna.Patterns.Singletone;
 * ServiceLocator является синглтоном и предоставляет удобный способ регистрации, отмены регистрации и получения сервисов в приложении.
 */
 
-public class ServiceLocator : Singletone<ServiceLocator>
+public class ServiceLocator
 {
     /** @brief Хранилище компонентов, зарегистрированных в сервис-локаторе. */
     protected DictionaryDataHolder<IService> _componentsMap;
