@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Services;
 using UnityEngine;
 
 namespace PaleLuna.Architecture.EntryPoint
@@ -11,8 +12,7 @@ namespace PaleLuna.Architecture.EntryPoint
     [AddComponentMenu("Moonlight Unity / Entry Points / Scene Boot")]
     public class SceneEntryPoint : EntryPoint
     {
-        private GameObject _sceneLocator;
-        protected Scene _sceneServiceLocator;
+        protected ServiceLocator _sceneServiceLocator = new ServiceLocator();
 
         /**
         * @brief Асинхронный метод для настройки и запуска игры.
@@ -27,11 +27,9 @@ namespace PaleLuna.Architecture.EntryPoint
 
             await UniTask.Yield();
 
-            print("SceneBoot");
 
-            _sceneLocator = new GameObject("SceneLocator");
-
-            _sceneServiceLocator = _sceneLocator.AddComponent<Scene>();
+            ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
+            
 
             FillSceneLocator();
             ProcessBaggage();

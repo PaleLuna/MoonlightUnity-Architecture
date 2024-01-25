@@ -4,6 +4,7 @@ using PaleLuna.DataHolder.Counter;
 using PaleLuna.Architecture.GameComponent;
 using PaleLuna.Architecture.Controllers;
 using UnityEngine;
+using Services;
 
 public class Test : MonoBehaviour, IUpdatable, IStartable
 {
@@ -104,7 +105,7 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
     }
 
     private void OnDestroy() =>
-        ServiceLocator.Instance?
+        ServiceManager.Instance.GlobalServices?
             .Get<GameController>()
                 .updatablesHolder?.UnRegistration(this);
 }

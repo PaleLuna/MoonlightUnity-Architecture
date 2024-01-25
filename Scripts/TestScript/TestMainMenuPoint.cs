@@ -2,6 +2,7 @@
 using PaleLuna.Architecture.EntryPoint;
 using PaleLuna.Architecture.Services;
 using PaleLuna.DataHolder;
+using Services;
 
 namespace MoonlightUnity_Architecture.Scripts.TestScript
 {
@@ -12,7 +13,9 @@ namespace MoonlightUnity_Architecture.Scripts.TestScript
             _ = Setup();
 
             print("Test point");
-            SceneBaggage sceneBaggage = ServiceLocator.Instance.Get<SceneLoaderService>().GetBaggage();
+            SceneBaggage sceneBaggage = ServiceManager
+                .Instance
+                .GlobalServices.Get<SceneLoaderService>().GetBaggage();
 
             if (sceneBaggage == null) return;
 

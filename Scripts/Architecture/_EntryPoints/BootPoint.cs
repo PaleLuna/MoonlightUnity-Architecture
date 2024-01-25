@@ -3,6 +3,7 @@ using PaleLuna.Architecture.Controllers;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Architecture.Services;
 using PaleLuna.Patterns.State.Game;
+using Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +28,7 @@ namespace PaleLuna.Architecture.EntryPoint
         /** @brief Объект, который не будет уничтожен при переходе между сценами. */
         private GameObject _dontDestroyObject;
 
+        private ServiceLocator _globalServiceLocator = new ServiceLocator();
         #endregion
 
         #region Mono methods
@@ -53,14 +55,16 @@ namespace PaleLuna.Architecture.EntryPoint
             _dontDestroyObject = new GameObject("DontDestroy");
             DontDestroyOnLoad(_dontDestroyObject);
 
-            _ = _dontDestroyObject.AddComponent<ServiceLocator>();
+            _ = _dontDestroyObject.AddComponent<ServiceManager>();
 
-            ServiceLocator.Instance.Registarion<SceneLoaderService>(new SceneLoaderService());
+            ServiceManager.Instance.GlobalServices = _globalServiceLocator;
+            _globalServiceLocator.Registarion<SceneLoaderService>(new SceneLoaderService());
+
 
             await base.Setup();
 
-            ServiceLocator
-                .Instance.GetComponent<GameController>()
+            _globalServiceLocator
+                .Get<GameController>()
                 .stateHolder.ChangeState<PlayState>();
 
             JumpToScene();
@@ -83,7 +87,7 @@ namespace PaleLuna.Architecture.EntryPoint
          */
         protected void JumpToScene(int sceneNum = -1)
         {
-            SceneLoaderService sceneService = ServiceLocator.Instance.Get<SceneLoaderService>();
+            SceneLoaderService sceneService = _globalServiceLocator.Get<SceneLoaderService>();
 
             sceneService.LoadScene(sceneNum < 0 ? _nextScene : sceneNum);
         }
