@@ -1,8 +1,9 @@
+using PaleLuna.Architecture.Services;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Apple : Item
+public class Apple : Item, IService
 {
     public Apple()
     {

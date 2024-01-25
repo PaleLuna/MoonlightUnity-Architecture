@@ -23,15 +23,14 @@ namespace PaleLuna.Architecture.EntryPoint
         */
         protected override async UniTask Setup()
         {
-            await base.Setup();
+            ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
+            _sceneServiceLocator.Registarion<Apple>(new Apple());
+            FillSceneLocator();
 
             await UniTask.Yield();
 
+            await base.Setup();
 
-            ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
-            
-
-            FillSceneLocator();
             ProcessBaggage();
         }
 

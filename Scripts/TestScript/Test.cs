@@ -19,6 +19,7 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
     {
         if (_isStartable) return;
 
+        print(ServiceManager.Instance.SceneLocator.Get<Apple>().GetName());
 
         _isStartable = true;
     }
