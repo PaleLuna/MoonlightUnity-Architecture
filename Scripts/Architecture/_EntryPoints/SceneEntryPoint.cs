@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace PaleLuna.Architecture.EntryPoint
 {
+    /**
+ * @brief Класс для точек входа сцен.
+ *
+ * Этот класс предоставляет базовую структуру для управления инициализацией компонентов при запуске сцены.
+ */
     [AddComponentMenu("Moonlight Unity / Entry Points / Scene Boot")]
     public class SceneEntryPoint : EntryPoint
     {
