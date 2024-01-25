@@ -1,4 +1,4 @@
-﻿using System;
+﻿using PaleLuna.Architecture.Services;
 using PaleLuna.Patterns.Singletone;
 
 namespace PaleLuna.DataHolder
@@ -11,7 +11,7 @@ namespace PaleLuna.DataHolder
     public class ServiceLocator : Singletone<ServiceLocator>
     {
         /** @brief Хранилище компонентов, зарегистрированных в сервис-локаторе. */
-        private DictionaryDataHolder<Object> _componentsMap;
+        protected DictionaryDataHolder<IService> _componentsMap;
 
         /**
     * @brief Конструктор класса.
@@ -20,7 +20,7 @@ namespace PaleLuna.DataHolder
     */
         public ServiceLocator()
         {
-            _componentsMap = new DictionaryDataHolder<object>();
+            _componentsMap = new DictionaryDataHolder<IService>();
         }
 
         /**
@@ -35,7 +35,7 @@ namespace PaleLuna.DataHolder
      * ServiceLocator.Instance.Registration<MyService>(new MyService());
      * @endcode
      */
-        public TP Registarion<TP>(TP item)
+        public TP Registarion<TP>(TP item) where TP : IService
         {
             return _componentsMap.Registration<TP>(item);
         }
@@ -51,7 +51,7 @@ namespace PaleLuna.DataHolder
      * ServiceLocator.Instance.Unregistration<MyService>();
      * @endcode
      */
-        public TP Unregistration<TP>()
+        public TP Unregistration<TP>() where TP : IService
         {
             return _componentsMap.Unregistration<TP>();
         }
@@ -67,6 +67,6 @@ namespace PaleLuna.DataHolder
      * MyService service = ServiceLocator.Instance.Get<MyService>();
      * @endcode
      */
-        public TP Get<TP>() => _componentsMap.GetByType<TP>();
+        public TP Get<TP>() where TP : IService => _componentsMap.GetByType<TP>(); 
     }
 }
