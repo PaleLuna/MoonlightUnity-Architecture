@@ -20,8 +20,6 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
 
 
         _isStartable = true;
-
-        ServiceLocator.Instance.Get<GameController>().Registatrion(this);
     }
         
 

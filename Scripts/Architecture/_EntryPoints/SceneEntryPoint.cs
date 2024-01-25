@@ -29,8 +29,11 @@ namespace PaleLuna.Architecture.EntryPoint
             _sceneServiceLocator = _sceneLocator.AddComponent<Scene>();
 
             FillSceneLocator();
+            ProcessBaggage();
         }
 
-        protected virtual void FillSceneLocator(){}
+        protected virtual void FillSceneLocator() { }
+
+        protected virtual void ProcessBaggage() { }
     }
 }

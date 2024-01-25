@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using PaleLuna.Architecture.Controllers;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Architecture.Services;
-using PaleLuna.DataHolder;
 using PaleLuna.Patterns.State.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
