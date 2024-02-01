@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using PaleLuna.Architecture.Services;
 using Services;
 using UnityEngine;
 
@@ -23,8 +24,14 @@ namespace PaleLuna.Architecture.EntryPoint
         */
         protected override async UniTask Setup()
         {
+            if(ServiceManager.Instance == null)
+            {
+                SceneLoaderService sceneLoader = new();
+
+                sceneLoader.LoadScene(0);
+                return;
+            }
             ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
-            _sceneServiceLocator.Registarion<Apple>(new Apple());
             FillSceneLocator();
 
             await UniTask.Yield();
