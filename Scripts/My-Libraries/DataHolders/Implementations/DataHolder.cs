@@ -54,6 +54,10 @@ namespace PaleLuna.DataHolder
         {
             ReplaceList(list);
         }
+        public DataHolder(T[] array)
+        {
+            ReplaceList(new List<T>(array));
+        }
         #endregion
 
         #region Registration
