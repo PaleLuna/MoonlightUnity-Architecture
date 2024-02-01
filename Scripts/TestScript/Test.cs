@@ -1,15 +1,18 @@
-using System;
+using PaleLuna.Architecture.GameComponent;
 using PaleLuna.DataHolder;
 using PaleLuna.DataHolder.Counter;
-using PaleLuna.Architecture.GameComponent;
-using PaleLuna.Architecture.Controllers;
+using System.Collections.Generic;
 using UnityEngine;
-using Services;
 
-public class Test : MonoBehaviour, IUpdatable, IStartable
+public class Test : MonoBehaviour, IStartable
 {
     [SerializeField] private string _name;
+
+    [SerializeField] private Test other;
+
     private ObjectCounter<Item> _itemCounter;
+    private DataHolder<Test> dataHolder = new();
+
 
     private bool _isStartable = false;
 
@@ -19,94 +22,29 @@ public class Test : MonoBehaviour, IUpdatable, IStartable
     {
         if (_isStartable) return;
 
-        print(ServiceManager.Instance.SceneLocator.Get<Apple>().GetName());
+        RunTests();
 
         _isStartable = true;
     }
-        
 
-    public void EveryFrameRun() => 
-        Debug.Log($"Run {this}");
-
-
-    private void TestObjectCounter()
+    private void RunTests()
     {
-        _itemCounter = new ObjectCounter<Item>();
+        Rock rock = new Rock();
 
-        try
+        dataHolder.Registration(new List<Test>()
         {
-            _itemCounter.PopItems<Apple>();
-        }
-        catch (NullReferenceException ex)
-        {
-            print(ex.Message);
-        }
+            other
+        });
 
-        //Тест на добавление
-        _itemCounter.AddItem(new Apple(), 10);
-        _itemCounter.AddItem(new Rock());
-        _itemCounter.AddItem(new Stick(),3);
-
-
-        print(_itemCounter);
-        _itemCounter.ForEach(item => print(item.GetName()));
-
-        //Тест на удаление
-        _itemCounter.PopItems<Apple>(4);
-        _itemCounter.PopItems<Stick>(5);
-        _itemCounter.PopItems<Rock>(1);
-
-        print(_itemCounter);
-
-        _itemCounter.RemoveEmpty();
-        print(_itemCounter);
-
-        try
-        {
-            _itemCounter.CheckCount<Stick>();
-        }
-        catch (NullReferenceException ex)
-        {
-            print(ex.Message);
-        }
-
-        print(_itemCounter.PopItems<Apple>().EatApple());
-
-        print(_itemCounter.Pick<Apple>().EatApple());
-
-        print(_itemCounter.PickHolder<Apple>().item.EatApple());
-
-        try
-        {
-            print(_itemCounter.PopItems<Stick>());
-        }
-        catch (NullReferenceException ex)
-        {
-            print(ex.Message);
-        }
-
-        try
-        {
-            print(_itemCounter.Pick<Stick>());
-        }
-        catch (NullReferenceException ex)
-        {
-            print(ex.Message);
-        }
-
-        try
-        {
-            print(_itemCounter.PickHolder<Stick>().Count);
-        }
-        catch (NullReferenceException ex)
-        {
-            print(ex.Message);
-        }
-
+        print(dataHolder.At(0));
+        print(dataHolder);
     }
 
-    private void OnDestroy() =>
-        ServiceManager.Instance.GlobalServices?
-            .Get<GameController>()
-                .updatablesHolder?.UnRegistration(this);
+    [ContextMenu("Clear")]
+    private void Clear()
+    {
+        dataHolder.Clear();
+
+        print(dataHolder);
+    }
 }
