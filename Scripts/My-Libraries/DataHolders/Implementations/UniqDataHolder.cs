@@ -10,7 +10,7 @@ namespace PaleLuna.DataHolder
      * Этот класс реализует интерфейс IUniqDataHolder<T> и использует словарь для хранения уникальных элементов по их типу.
      * @tparam T Тип элементов, хранящихся в словаре.
      */
-    public class DictionaryDataHolder<T> : IUniqDataHolder<T>
+    public class UniqDataHolder<T> : IUniqDataHolder<T>
     {
         /** @brief Событие, вызываемое при добавлении нового элемента. */
         private readonly UnityEvent<T> _onItemAdded = new();
@@ -29,7 +29,7 @@ namespace PaleLuna.DataHolder
          *
          * Создает экземпляр класса с пустым словарем.
          */
-        public DictionaryDataHolder() => _itemsMap = new();
+        public UniqDataHolder() => _itemsMap = new();
 
         /**
          * @brief Регистрация уникального элемента в словаре по его типу.
@@ -103,6 +103,11 @@ namespace PaleLuna.DataHolder
             return (TP)_itemsMap[type];
         }
 
+        public T this[Type type]
+        {
+            get => _itemsMap[type];
+        }
+
         /**
          * @brief Применение действия ко всем уникальным элементам в словаре.
          *
@@ -125,6 +130,6 @@ namespace PaleLuna.DataHolder
          *
          * Очищает словарь при уничтожении объекта.
          */
-        ~DictionaryDataHolder() => _itemsMap.Clear();
+        ~UniqDataHolder() => _itemsMap.Clear();
     }
 }

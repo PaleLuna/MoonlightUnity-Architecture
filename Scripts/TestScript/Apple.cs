@@ -1,13 +1,15 @@
 using PaleLuna.Architecture.Services;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Apple : Item, IService
 {
-    public Apple()
+    private string _color;
+
+    public string color => _color;
+
+    public Apple(string color)
     {
         this.name = "apple";
+        this._color = color;
     }
 
     public string EatApple()
