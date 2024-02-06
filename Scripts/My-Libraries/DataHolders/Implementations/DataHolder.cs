@@ -183,7 +183,7 @@ namespace PaleLuna.DataHolder
         private void ReplaceList(List<T> otherList)
         {
             Clear();
-            _itemsList = otherList;
+            _itemsList = new(otherList);
         }
 
         /**
