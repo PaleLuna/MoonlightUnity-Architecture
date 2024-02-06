@@ -63,18 +63,18 @@ namespace PaleLuna.DataHolder
         #region Registration
 
         /**
-     * @brief Регистрация списка элементов в коллекции.
-     *
-     * @param otherItems Список элементов для регистрации.
-     * @param registrationType Тип регистрации (добавление в конец, в начало, замена, объединение в конец).
-     *
-     * Пример использования:
-     * @code
-     * DataHolder<int> dataHolder = new DataHolder<int>();
-     * List<int> otherItems = new List<int> { 1, 2, 3 };
-     * dataHolder.Registration(otherItems, ListRegistrationType.AddToEnd);
-     * @endcode
-     */
+         * @brief Регистрация списка элементов в коллекции.
+         *
+         * @param otherItems Список элементов для регистрации.
+         * @param registrationType Тип регистрации (добавление в конец, в начало, замена, объединение в конец).
+         *
+         * Пример использования:
+         * @code
+         * DataHolder<int> dataHolder = new DataHolder<int>();
+         * List<int> otherItems = new List<int> { 1, 2, 3 };
+         * dataHolder.Registration(otherItems, ListRegistrationType.AddToEnd);
+         * @endcode
+         */
         public void Registration(
             List<T> otherItems,
             ListRegistrationType registrationType = ListRegistrationType.Replace
@@ -100,20 +100,20 @@ namespace PaleLuna.DataHolder
             }
         }
 
-        /**
-     * @brief Регистрация элемента в коллекции с указанным порядком.
-     *
-     * @tparam TP Тип элемента для регистрации.
-     * @param item Элемент для регистрации.
-     * @param order Порядок, в котором элемент будет добавлен в коллекцию.
-     * @return Зарегистрированный элемент.
-     *
-     * Пример использования:
-     * @code
-     * DataHolder<string> dataHolder = new DataHolder<string>();
-     * dataHolder.Registration("Example", 0);
-     * @endcode
-     */
+            /**
+         * @brief Регистрация элемента в коллекции с указанным порядком.
+         *
+         * @tparam TP Тип элемента для регистрации.
+         * @param item Элемент для регистрации.
+         * @param order Порядок, в котором элемент будет добавлен в коллекцию.
+         * @return Зарегистрированный элемент.
+         *
+         * Пример использования:
+         * @code
+         * DataHolder<string> dataHolder = new DataHolder<string>();
+         * dataHolder.Registration("Example", 0);
+         * @endcode
+         */
         public TP Registration<TP>(TP item, int order)
             where TP : T
         {
@@ -123,19 +123,19 @@ namespace PaleLuna.DataHolder
             return item;
         }
 
-        /**
-     * @brief Регистрация элемента в конец коллекции.
-     *
-     * @tparam TP Тип элемента для регистрации.
-     * @param item Элемент для регистрации.
-     * @return Зарегистрированный элемент.
-     *
-     * Пример использования:
-     * @code
-     * DataHolder<float> dataHolder = new DataHolder<float>();
-     * dataHolder.Registration(3.14f);
-     * @endcode
-     */
+            /**
+         * @brief Регистрация элемента в конец коллекции.
+         *
+         * @tparam TP Тип элемента для регистрации.
+         * @param item Элемент для регистрации.
+         * @return Зарегистрированный элемент.
+         *
+         * Пример использования:
+         * @code
+         * DataHolder<float> dataHolder = new DataHolder<float>();
+         * dataHolder.Registration(3.14f);
+         * @endcode
+         */
         public TP Registration<TP>(TP item)
             where TP : T
         {

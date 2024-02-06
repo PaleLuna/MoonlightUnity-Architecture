@@ -1,7 +1,5 @@
 using PaleLuna.Architecture.GameComponent;
-using PaleLuna.DataHolder;
-using PaleLuna.DataHolder.Counter;
-using System.Collections.Generic;
+using PaleLuna.DataHolder.Dictinory;
 using UnityEngine;
 
 public class Test : MonoBehaviour, IStartable
@@ -9,9 +7,6 @@ public class Test : MonoBehaviour, IStartable
     [SerializeField] private string _name;
 
     [SerializeField] private Test other;
-
-    private ObjectCounter<Item> _itemCounter;
-    private DataHolder<Test> dataHolder = new();
 
 
     private bool _isStartable = false;
@@ -29,22 +24,15 @@ public class Test : MonoBehaviour, IStartable
 
     private void RunTests()
     {
-        Rock rock = new Rock();
+        DictinoryHolder<string, Item> dictinory = new();
 
-        dataHolder.Registration(new List<Test>()
-        {
-            other
-        });
+        dictinory
+            .Registration("Apple1", new Apple("red"))
+            .Registration("Rock1", new Rock())
+            .Registration("Rock2", new Rock());
 
-        print(dataHolder.At(0));
-        print(dataHolder);
-    }
+        print(dictinory.Pop<Apple>("Rock1").color);
 
-    [ContextMenu("Clear")]
-    private void Clear()
-    {
-        dataHolder.Clear();
-
-        print(dataHolder);
+        dictinory.ForEach(item => print(item.GetName()));
     }
 }
