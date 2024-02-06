@@ -11,7 +11,7 @@ using PaleLuna.Patterns.Singletone;
 public class ServiceLocator
 {
     /** @brief Хранилище компонентов, зарегистрированных в сервис-локаторе. */
-    protected DictionaryDataHolder<IService> _componentsMap;
+    protected UniqDataHolder<IService> _componentsMap;
 
     /**
 * @brief Конструктор класса.
@@ -20,7 +20,7 @@ public class ServiceLocator
 */
     public ServiceLocator()
     {
-        _componentsMap = new DictionaryDataHolder<IService>();
+        _componentsMap = new UniqDataHolder<IService>();
     }
 
     /**

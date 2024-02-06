@@ -16,7 +16,7 @@ namespace PaleLuna.Patterns.State
         /**
          * @brief Хранилище состояний, реализованное в виде словаря.
          */
-        private DictionaryDataHolder<T> _stateMap;
+        private UniqDataHolder<T> _stateMap;
         /**
         * @brief Текущее состояние.
         */
@@ -27,7 +27,7 @@ namespace PaleLuna.Patterns.State
         * Создает новый объект хранилища состояний.
         */
         public StateHolder() => 
-            _stateMap = new DictionaryDataHolder<T>();
+            _stateMap = new UniqDataHolder<T>();
         
         /**
          * @brief Регистрация нового состояния.
