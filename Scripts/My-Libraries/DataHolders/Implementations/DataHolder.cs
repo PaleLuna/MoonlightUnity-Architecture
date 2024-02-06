@@ -294,7 +294,7 @@ namespace PaleLuna.DataHolder
 */
         public void RemoveAllNulls() => _itemsList.RemoveAll(item => item == null);
 
-        public void Clear() => _itemsList.Clear();
+        public void Clear() => _itemsList?.Clear();
         #endregion
 
         ~DataHolder() => _itemsList.Clear();

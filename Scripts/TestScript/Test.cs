@@ -1,5 +1,8 @@
+using NUnit.Framework;
 using PaleLuna.Architecture.GameComponent;
+using PaleLuna.DataHolder;
 using PaleLuna.DataHolder.Dictinory;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Test : MonoBehaviour, IStartable
@@ -24,15 +27,9 @@ public class Test : MonoBehaviour, IStartable
 
     private void RunTests()
     {
-        DictinoryHolder<string, Item> dictinory = new();
+        List<Item> items = new() { new Apple("Green"), new Apple("Yellow"), new Rock() };
+        DataHolder<Item> itemsNew = new(items);
 
-        dictinory
-            .Registration("Apple1", new Apple("red"))
-            .Registration("Rock1", new Rock())
-            .Registration("Rock2", new Rock());
-
-        print(dictinory.Pop<Apple>("Rock1").color);
-
-        dictinory.ForEach(item => print(item.GetName()));
+        items.ForEach(item => print(item.GetName()));
     }
 }
