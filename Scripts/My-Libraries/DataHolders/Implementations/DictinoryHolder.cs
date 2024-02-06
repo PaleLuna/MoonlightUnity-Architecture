@@ -13,7 +13,7 @@ namespace PaleLuna.DataHolder.Dictinory
 
         public UnityEvent<T> OnItemAdded => _onItemAdded;
 
-        public int Count => throw new NotImplementedException();
+        public int Count => _dictinory.Count;
         #endregion
 
         #region Constructors
@@ -77,7 +77,6 @@ namespace PaleLuna.DataHolder.Dictinory
             return item;
         }
 
-        //TODO
         public T this[TKey key]
         {
             get => _dictinory[key];
