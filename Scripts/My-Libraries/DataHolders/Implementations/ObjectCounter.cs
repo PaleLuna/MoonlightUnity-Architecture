@@ -241,7 +241,7 @@ namespace PaleLuna.DataHolder.Counter
          * objectCounter.ForEach(item => Debug.Log(item));
          * @endcode
          */
-        public void ForEachHolders(Action<ItemHolder<T>> action)
+        public void ForEach(Action<ItemHolder<T>> action)
         {
             List<ItemHolder<T>> items = new List<ItemHolder<T>>(_itemMap.Values);
 
