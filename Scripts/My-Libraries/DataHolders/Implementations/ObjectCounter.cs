@@ -72,6 +72,13 @@ namespace PaleLuna.DataHolder.Counter
             return _itemMap[key].Count;
         }
 
+        public int CheckCount(Type type)
+        {
+            CheckItem(type);
+
+            return _itemMap[type].Count;
+        }
+
         /**
         * @brief Получение одного объекта указанного типа.
         *

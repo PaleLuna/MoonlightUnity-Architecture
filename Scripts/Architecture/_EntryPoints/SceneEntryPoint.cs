@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
 using PaleLuna.Architecture.Services;
 using Services;
+using System;
+using System.Threading;
 using UnityEngine;
 
 namespace PaleLuna.Architecture.EntryPoint
@@ -29,7 +31,8 @@ namespace PaleLuna.Architecture.EntryPoint
                 SceneLoaderService sceneLoader = new();
 
                 sceneLoader.LoadScene(0);
-                return;
+
+                throw new OperationCanceledException("ServiceManager is null. Reload");
             }
             ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
             FillSceneLocator();

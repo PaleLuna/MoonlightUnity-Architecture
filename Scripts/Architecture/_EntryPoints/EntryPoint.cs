@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using PaleLuna.Architecture.GameComponent;
 using PaleLuna.Architecture.Initializer;
@@ -19,6 +20,7 @@ namespace PaleLuna.Architecture.EntryPoint
         private const int DEFAULT_LIST_CAPACITY = 10;
 
         /** @brief Список объектов, реализующих интерфейс IInitializer. */
+        [SerializeReference, RequireInterface(typeof(IInitializer))]
         protected List<IInitializer> _initializersList = new(DEFAULT_LIST_CAPACITY);
 
         /**
@@ -28,12 +30,15 @@ namespace PaleLuna.Architecture.EntryPoint
         */
         [Header("Startables")]
         [SerializeReference, RequireInterface(typeof(IStartable))]
-        private List<MonoBehaviour> _startablesMono;
+        private List<MonoBehaviour> _startablesMonoFirsts;
 
         /** @brief Коллекция объектов IStartable для управления запуском. */
         private DataHolder<IStartable> _startables;
 
-        protected virtual void Start() => _ = Setup();
+        protected virtual void Start()
+        {
+            _ = Setup();
+        }
 
         /**
        * @brief Метод для настройки объекта EntryPoint.
@@ -75,8 +80,8 @@ namespace PaleLuna.Architecture.EntryPoint
         */
         protected void CompileAllComponents()
         {
-            _startables = new DataHolder<IStartable>(_startablesMono.Count);
-            _startablesMono.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
+            _startables = new DataHolder<IStartable>(_startablesMonoFirsts.Count);
+            _startablesMonoFirsts.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
 
             _startables.Registration(
                 Searcher.ListOfAllByInterface<IStartable>(item => item.IsStarted == false),

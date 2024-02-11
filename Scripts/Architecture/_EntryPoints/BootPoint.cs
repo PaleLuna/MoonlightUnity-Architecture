@@ -38,8 +38,10 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Ограничивает значение _nextScene от 0 до общего количества сцен в проекте.
          */
-        private void OnValidate() =>
-            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCount);
+        private void OnValidate()
+        {
+            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCountInBuildSettings);
+        }
 
         #endregion
 
