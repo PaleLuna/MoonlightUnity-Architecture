@@ -72,6 +72,13 @@ namespace PaleLuna.DataHolder.Counter
             return _itemMap[key].Count;
         }
 
+        public int CheckCount(Type type)
+        {
+            CheckItem(type);
+
+            return _itemMap[type].Count;
+        }
+
         /**
         * @brief Получение одного объекта указанного типа.
         *
@@ -234,7 +241,7 @@ namespace PaleLuna.DataHolder.Counter
          * objectCounter.ForEach(item => Debug.Log(item));
          * @endcode
          */
-        public void ForEach(Action<ItemHolder<T>> action)
+        public void ForEachHolders(Action<ItemHolder<T>> action)
         {
             List<ItemHolder<T>> items = new List<ItemHolder<T>>(_itemMap.Values);
 
