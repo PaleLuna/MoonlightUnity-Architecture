@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using PaleLuna.Architecture.GameComponent;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Attributes;
 using PaleLuna.DataHolder;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PaleLuna.Architecture.EntryPoint
@@ -19,7 +18,7 @@ namespace PaleLuna.Architecture.EntryPoint
         /** @brief Количество элементов по умолчанию для списка инициализаторов. */
         private const int DEFAULT_LIST_CAPACITY = 10;
 
-        /** @brief Список объектов, реализующих интерфейс IInitializer. */
+        /** @brief Список объектов MonoBehaviour, реализующих интерфейс IInitializer. */
         [SerializeReference, RequireInterface(typeof(IInitializer))]
         private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
 
@@ -34,13 +33,11 @@ namespace PaleLuna.Architecture.EntryPoint
 
         /** @brief Коллекция объектов IStartable для управления запуском. */
         private DataHolder<IStartable> _startables;
+        /** @brief Коллекция объектов IInitializer для управления запуском. */
         protected DataHolder<IInitializer> _initializers = new(DEFAULT_LIST_CAPACITY);
 
-        protected virtual void Start()
-        {
+        protected virtual void Start() =>
             _ = Setup();
-        }
-
         /**
        * @brief Метод для настройки объекта EntryPoint.
        *
@@ -94,9 +91,12 @@ namespace PaleLuna.Architecture.EntryPoint
                 ListRegistrationType.MergeToEndUnion
             );
         }
+
         private void CompileAllInitializers()
         {
-            _initializersMono.ForEach(behaviour => _initializers.Registration((IInitializer)behaviour));
+            _initializersMono.ForEach(behaviour =>
+                _initializers.Registration((IInitializer)behaviour)
+            );
         }
 
         /**
@@ -124,7 +124,7 @@ namespace PaleLuna.Architecture.EntryPoint
                     if (item.status == InitStatus.Done)
                         lastDoneInits++;
                 });
-                    
+
                 if (lastDoneInits > currentDoneInits)
                 {
                     currentDoneInits = lastDoneInits;

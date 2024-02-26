@@ -40,7 +40,7 @@ namespace PaleLuna.Architecture.EntryPoint
          */
         private void OnValidate()
         {
-            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCountInBuildSettings-1);
+            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCountInBuildSettings - 1);
         }
 
         #endregion
@@ -62,12 +62,9 @@ namespace PaleLuna.Architecture.EntryPoint
             ServiceManager.Instance.GlobalServices = _globalServiceLocator;
             _globalServiceLocator.Registarion(new SceneLoaderService());
 
-
             await base.Setup();
 
-            _globalServiceLocator
-                .Get<GameController>()
-                .stateHolder.ChangeState<PlayState>();
+            _globalServiceLocator.Get<GameController>().stateHolder.ChangeState<PlayState>();
 
             JumpToScene();
         }
