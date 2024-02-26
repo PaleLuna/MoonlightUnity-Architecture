@@ -40,7 +40,7 @@ namespace PaleLuna.Architecture.EntryPoint
          */
         private void OnValidate()
         {
-            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCountInBuildSettings);
+            _nextScene = Mathf.Clamp(_nextScene, 0, SceneManager.sceneCountInBuildSettings-1);
         }
 
         #endregion
@@ -60,7 +60,7 @@ namespace PaleLuna.Architecture.EntryPoint
             _ = _dontDestroyObject.AddComponent<ServiceManager>();
 
             ServiceManager.Instance.GlobalServices = _globalServiceLocator;
-            _globalServiceLocator.Registarion<SceneLoaderService>(new SceneLoaderService());
+            _globalServiceLocator.Registarion(new SceneLoaderService());
 
 
             await base.Setup();
@@ -80,7 +80,7 @@ namespace PaleLuna.Architecture.EntryPoint
          * Добавляет GameControllerIInitializer в список инициализаторов.
          */
         protected override void FillInitializers() =>
-            _initializersList.Add(new GameControllerInitializer(_dontDestroyObject));
+            _initializers.Registration(new GameControllerInitializer(_dontDestroyObject));
 
         /**
          * @brief Метод для перехода к указанной сцене.

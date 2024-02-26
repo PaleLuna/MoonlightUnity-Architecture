@@ -21,7 +21,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
         /** @brief Список объектов, реализующих интерфейс IInitializer. */
         [SerializeReference, RequireInterface(typeof(IInitializer))]
-        protected List<IInitializer> _initializersList = new(DEFAULT_LIST_CAPACITY);
+        private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
 
         /**
         * @brief Список объектов, реализующих интерфейс IStartable, предназначенных для автоматического запуска.
@@ -30,10 +30,11 @@ namespace PaleLuna.Architecture.EntryPoint
         */
         [Header("Startables")]
         [SerializeReference, RequireInterface(typeof(IStartable))]
-        private List<MonoBehaviour> _startablesMonoFirsts;
+        private List<MonoBehaviour> _startablesMono;
 
         /** @brief Коллекция объектов IStartable для управления запуском. */
         private DataHolder<IStartable> _startables;
+        protected DataHolder<IInitializer> _initializers = new(DEFAULT_LIST_CAPACITY);
 
         protected virtual void Start()
         {
@@ -48,6 +49,7 @@ namespace PaleLuna.Architecture.EntryPoint
         protected virtual async UniTask Setup()
         {
             FillInitializers();
+            CompileAllInitializers();
             StartAllInitializers();
 
             await LoadAllServices();
@@ -70,7 +72,11 @@ namespace PaleLuna.Architecture.EntryPoint
        */
         protected virtual void StartAllInitializers()
         {
-            _initializersList.ForEach(initializer => initializer.StartInit());
+            _initializers.ForEach(initializer =>
+            {
+                if (initializer.status == InitStatus.Shutdown)
+                    initializer.StartInit();
+            });
         }
 
         /**
@@ -78,15 +84,19 @@ namespace PaleLuna.Architecture.EntryPoint
         *
         * Этот метод создает коллекцию _startables и регистрирует в нее все компоненты IStartable.
         */
-        protected void CompileAllComponents()
+        private void CompileAllComponents()
         {
-            _startables = new DataHolder<IStartable>(_startablesMonoFirsts.Count);
-            _startablesMonoFirsts.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
+            _startables = new DataHolder<IStartable>(_startablesMono.Count);
+            _startablesMono.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
 
             _startables.Registration(
                 Searcher.ListOfAllByInterface<IStartable>(item => item.IsStarted == false),
                 ListRegistrationType.MergeToEndUnion
             );
+        }
+        private void CompileAllInitializers()
+        {
+            _initializersMono.ForEach(behaviour => _initializers.Registration((IInitializer)behaviour));
         }
 
         /**
@@ -105,18 +115,20 @@ namespace PaleLuna.Architecture.EntryPoint
         {
             int currentDoneInits = 0;
 
-            while (currentDoneInits < _initializersList.Count)
+            while (currentDoneInits < _initializers.Count)
             {
                 int lastDoneInits = 0;
 
-                foreach (IInitializer item in _initializersList)
+                _initializers.ForEach(item =>
+                {
                     if (item.status == InitStatus.Done)
                         lastDoneInits++;
-
+                });
+                    
                 if (lastDoneInits > currentDoneInits)
                 {
                     currentDoneInits = lastDoneInits;
-                    print($"Loading services: {currentDoneInits} / {_initializersList.Count}");
+                    print($"Loading services: {currentDoneInits} / {_initializers.Count}");
                 }
 
                 await UniTask.Yield();
