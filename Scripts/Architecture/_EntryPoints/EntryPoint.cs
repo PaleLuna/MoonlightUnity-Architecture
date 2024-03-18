@@ -36,8 +36,9 @@ namespace PaleLuna.Architecture.EntryPoint
         /** @brief Коллекция объектов IInitializer для управления запуском. */
         protected DataHolder<IInitializer> _initializers = new(DEFAULT_LIST_CAPACITY);
 
-        protected virtual void Start() =>
+        protected virtual void Awake() =>
             _ = Setup();
+            
         /**
        * @brief Метод для настройки объекта EntryPoint.
        *
