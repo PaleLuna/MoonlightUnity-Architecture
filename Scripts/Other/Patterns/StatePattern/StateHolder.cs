@@ -16,7 +16,7 @@ namespace PaleLuna.Patterns.State
         /**
          * @brief Хранилище состояний, реализованное в виде словаря.
          */
-        private UniqDataHolder<T> _stateMap;
+        protected UniqDataHolder<T> _stateMap;
         /**
         * @brief Текущее состояние.
         */
@@ -37,7 +37,7 @@ namespace PaleLuna.Patterns.State
          * @return Зарегистрированное состояние.
          */
         public TP Registarion<TP>(TP item) where TP : T => 
-            _stateMap.Registration<TP>(item);
+            _stateMap.Registration(item);
 
         /**
          * @brief Удаление зарегистрированного состояния.
@@ -63,6 +63,16 @@ namespace PaleLuna.Patterns.State
             currentState?.StateStop();
             currentState = newState;
             currentState.StateStart();
+        }
+
+        protected void DeleteAllStates()
+        {
+            _stateMap = null;
+        }
+
+        ~StateHolder()
+        {
+            DeleteAllStates();
         }
     }
 }
