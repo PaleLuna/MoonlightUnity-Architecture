@@ -77,6 +77,18 @@ namespace PaleLuna.Architecture.Controllers
         {
             updatablesHolder.Registration(component);
         }
+        public void Unregistration(IUpdatable component) 
+        {
+            updatablesHolder.UnRegistration(component);
+        }
+        public void Unregistration(IFixedUpdatable component)
+        {
+            updatablesHolder.UnRegistration(component);
+        }
+        public void Unregistration(ILateUpdatable component)
+        {
+            updatablesHolder.UnRegistration(component);
+        }
 
         #endregion
 
