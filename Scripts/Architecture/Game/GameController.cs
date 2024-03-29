@@ -65,15 +65,15 @@ namespace PaleLuna.Architecture.Controllers
         }
 
         #region Registration
-        public void Registatrion(IUpdatable component) 
+        public void Registration(IUpdatable component) 
         {
             updatablesHolder.Registration(component);
         }
-        public void Registatrion(IFixedUpdatable component)
+        public void Registration(IFixedUpdatable component)
         {
             updatablesHolder.Registration(component);
         }
-        public void Registatrion(ILateUpdatable component)
+        public void Registration(ILateUpdatable component)
         {
             updatablesHolder.Registration(component);
         }
