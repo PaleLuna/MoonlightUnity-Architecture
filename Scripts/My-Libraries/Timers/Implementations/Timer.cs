@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class Timer : ITimer
 {
-    
-
-    private float _originTimeStart;
-    private float _remainingTime;
-    private float _elapsedTime;
+    private float _originTimeStart = 0;
+    private float _remainingTime = 0;
+    private float _elapsedTime = 0;
 
     private UnityAction _action;
     private CancellationTokenSource _token;
@@ -18,15 +16,14 @@ public class Timer : ITimer
     public TimerStatus timerStatus => _timerStatus;
 
     public float elapsedTime => _elapsedTime;
+    public float remainingTime => _remainingTime - _elapsedTime;
 
     public Timer()
     {
-        _token = new CancellationTokenSource();
     }
 
     public Timer(float time, UnityAction action)
     {
-        _token = new CancellationTokenSource();
 
         SetTime(time);
         SetAction(action);
@@ -44,7 +41,7 @@ public class Timer : ITimer
     {
         if(_timerStatus == TimerStatus.Run) return;
 
-        _remainingTime = _originTimeStart - _elapsedTime;
+        _remainingTime -= _elapsedTime;
 
         StartClock();
     }
@@ -83,8 +80,9 @@ public class Timer : ITimer
 
     private void StartClock()
     {
-        _ = KeepCountdown();
+        _token = new CancellationTokenSource();
 
+        _ = KeepCountdown();
         _timerStatus = TimerStatus.Run;
     }
 
