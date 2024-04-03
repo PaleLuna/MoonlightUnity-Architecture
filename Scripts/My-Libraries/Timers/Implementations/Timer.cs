@@ -9,6 +9,8 @@ public class Timer : ITimer
     private float _remainingTime = 0;
     private float _elapsedTime = 0;
 
+    private float _startTime = 0;
+
     private UnityAction _action;
     private CancellationTokenSource _token;
 
@@ -24,17 +26,38 @@ public class Timer : ITimer
 
     public Timer(float time, UnityAction action)
     {
-
         SetTime(time);
         SetAction(action);
     }
 
     public void Start()
     {
-        if(_timerStatus == TimerStatus.Run) _token.Cancel();
+        if(_timerStatus == TimerStatus.Run) return;
         Reset();
 
         StartClock();
+    }
+
+    public void Stop()
+    {
+        _ = TryStopClock();
+
+        _timerStatus = TimerStatus.Stop;
+    }
+
+    public void Reset()
+    {
+        _remainingTime = _originTimeStart;
+        _elapsedTime = 0;
+
+        _startTime = Time.time;
+    }
+
+    public void Restart()
+    {
+        _ = TryStopClock();
+        
+        Start();
     }
 
     public void OnResume()
@@ -48,51 +71,47 @@ public class Timer : ITimer
 
     public void OnPause()
     {
-        if(_timerStatus != TimerStatus.Run) return;
-
-        _token.Cancel();
-        _timerStatus = TimerStatus.Pause;
+        if(TryStopClock())
+            _timerStatus = TimerStatus.Pause;
     }
 
-    public void Stop()
-    {
-        OnPause();
-        Reset();
-
-        _timerStatus = TimerStatus.Stop;
-    }
-
-    public void Reset()
-    {
-        _remainingTime = _originTimeStart;
-        _elapsedTime = 0;
-    }
-
-    public void SetTime(float time)
+    public ITimer SetTime(float time)
     {
         _originTimeStart = time;
+        Reset();
+
+        return this;
     }
 
-    public void SetAction(UnityAction action)
+    public ITimer SetAction(UnityAction action)
     {
         _action = action;
+
+        return this;
     }
 
     private void StartClock()
     {
         _token = new CancellationTokenSource();
 
+        _startTime = Time.time;
         _ = KeepCountdown();
+
         _timerStatus = TimerStatus.Run;
+    }
+    private bool TryStopClock()
+    {
+        if(_timerStatus != TimerStatus.Run) return false;
+
+        _token.Cancel();
+        return true;
     }
 
     private async UniTask KeepCountdown()
     {
-        float startTime = Time.time;
-
         while(_remainingTime > _elapsedTime)
         {
-            _elapsedTime = Time.time - startTime;
+            _elapsedTime = Time.time - _startTime;
 
             await UniTask.Yield(_token.Token); 
         }
@@ -100,6 +119,4 @@ public class Timer : ITimer
         _action.Invoke();
         Stop();
     }
-
-    
 }
