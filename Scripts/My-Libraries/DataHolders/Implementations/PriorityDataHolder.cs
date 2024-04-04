@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine;
 
 namespace PaleLuna.DataHolder
 {
-class PriorityDataHolder<T> : IDataHolder<T>
+public class PriorityDataHolder<T> : IDataHolder<T>
 {
     #region Fields
     private const int DEFAULT_CAPACITY = 10;
@@ -27,9 +28,9 @@ class PriorityDataHolder<T> : IDataHolder<T>
     #endregion
 
     #region [ Registration Region ]
-        public void Registration(List<T> items, ListRegistrationType registrationType = ListRegistrationType.Replace)
+        public void Registration(PriorityDataHolder<T> items)
         {
-            throw new NotImplementedException();
+            Merge(items);
         }
     
         public void Registration<TP>(TP item, int order) where TP : T
@@ -120,7 +121,8 @@ class PriorityDataHolder<T> : IDataHolder<T>
 
         ForEach((ItemPriorityPackage<T> item) => 
         {
-            result += $"{item}: Priority - {item.priority}\n";
+            Debug.Log(item.Unpack());
+            result += $"{item.Unpack()}: Priority - {item.priority}\n";
         });
 
         return result;
@@ -143,11 +145,38 @@ class PriorityDataHolder<T> : IDataHolder<T>
     {
         for(int i = 0; i < _items.Count; i++)
         {
-            if((_items[i].priority != -1) && (item.priority > _items[i].priority))
+            if(item.Compare(_items[i]) == 1)
                 continue;
 
             _items.Insert(i, item);
+            return;
         }
+
+        _items.Add(item);
+
+    }
+
+    private void Merge(PriorityDataHolder<T> other)
+    {
+        List<ItemPriorityPackage<T>> newList = new(Count + other.Count);
+
+        int i = 0;
+        int j = 0;
+
+        for(int k = 0; k < newList.Capacity; k++)
+        {
+            if(i >= Count)
+                newList.Add(other._items[j++]);
+            else if(j >= other.Count)
+                newList.Add(_items[i++]);
+            
+            else if(_items[i].Compare(other._items[j]) == 1)
+                newList.Add(other._items[j++]);
+            else
+                newList.Add(_items[i++]);
+        }
+
+        _items = newList;
     }
     #endregion
 
@@ -176,5 +205,15 @@ public class ItemPriorityPackage<T>
     public T Unpack() => _item;
 
     public void SetPriority(int priority) => _priority = priority > 0 ? priority : 1;
+
+    public int Compare(ItemPriorityPackage<T> other)
+    {
+        if(priority == -1 || _priority > other.priority)
+            return 1;
+        if(_priority == other._priority)
+            return 0;
+
+        return -1;
+    }
 }
 }

@@ -30,17 +30,6 @@ namespace PaleLuna.DataHolder
             where TP : T;
 
         /**
-           * @brief Регистрация списка элементов в коллекции.
-           *
-           * @param items Список элементов для регистрации.
-           * @param registrationType Тип регистрации (добавление в конец, в начало, замена, объединение в конец).
-           */
-        public void Registration(
-            List<T> items,
-            ListRegistrationType registrationType = ListRegistrationType.Replace
-        );
-
-        /**
            * @brief Регистрация элемента в коллекции.
            *
            * @tparam TP Тип элемента для регистрации.
