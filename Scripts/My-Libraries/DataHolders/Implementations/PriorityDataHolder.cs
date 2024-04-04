@@ -121,7 +121,6 @@ public class PriorityDataHolder<T> : IDataHolder<T>
 
         ForEach((ItemPriorityPackage<T> item) => 
         {
-            Debug.Log(item.Unpack());
             result += $"{item.Unpack()}: Priority - {item.priority}\n";
         });
 
