@@ -1,23 +1,25 @@
 using PaleLuna.Architecture.GameComponent;
 using UnityEngine.Events;
 
-public interface ITimer : IPausable
+namespace PaleLuna.Timers
 {
-    public TimerStatus timerStatus {get;}
-    public float remainingTime {get;}
+    public interface ITimer : IPausable
+    {
+        public TimerStatus timerStatus {get;}
 
-    public void Start();
-    public void Stop();
-    public void Reset();
-    public void Restart();
+        public void Start();
+        public void Stop();
+        public void Reset();
+        public void Restart();
 
-    public ITimer SetTime(float time);
-    public ITimer SetAction(UnityAction action);
+        public ITimer SetTime(float time);
+        public ITimer SetAction(UnityAction action);
+    }
+    public enum TimerStatus 
+    {
+        Shutdown,
+        Pause,
+        Run
+    }
 }
 
-public enum TimerStatus 
-{
-    Stop,
-    Pause,
-    Run
-}

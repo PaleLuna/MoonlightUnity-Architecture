@@ -3,7 +3,9 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 using UnityEngine;
 
-public class Timer : ITimer
+namespace PaleLuna.Timers.Implementations
+{
+public class AsyncTimer : ITimer
 {
     private float _originTimeStart = 0;
     private float _remainingTime = 0;
@@ -12,19 +14,19 @@ public class Timer : ITimer
     private float _startTime = 0;
 
     private UnityAction _action;
-    private CancellationTokenSource _token;
+    private CancellationTokenSource _cancellationTokenSource;
 
-    private TimerStatus _timerStatus = TimerStatus.Stop;
+    private TimerStatus _timerStatus = TimerStatus.Shutdown;
     public TimerStatus timerStatus => _timerStatus;
 
     public float elapsedTime => _elapsedTime;
     public float remainingTime => _remainingTime - _elapsedTime;
 
-    public Timer()
+    public AsyncTimer()
     {
     }
 
-    public Timer(float time, UnityAction action)
+    public AsyncTimer(float time, UnityAction action)
     {
         SetTime(time);
         SetAction(action);
@@ -42,7 +44,7 @@ public class Timer : ITimer
     {
         _ = TryStopClock();
 
-        _timerStatus = TimerStatus.Stop;
+        _timerStatus = TimerStatus.Shutdown;
     }
 
     public void Reset()
@@ -92,7 +94,9 @@ public class Timer : ITimer
 
     private void StartClock()
     {
-        _token = new CancellationTokenSource();
+        if(_timerStatus == TimerStatus.Run) return;
+
+        _cancellationTokenSource = new CancellationTokenSource();
 
         _startTime = Time.time;
         _ = KeepCountdown();
@@ -103,7 +107,7 @@ public class Timer : ITimer
     {
         if(_timerStatus != TimerStatus.Run) return false;
 
-        _token.Cancel();
+        _cancellationTokenSource.Cancel();
         return true;
     }
 
@@ -113,10 +117,12 @@ public class Timer : ITimer
         {
             _elapsedTime = Time.time - _startTime;
 
-            await UniTask.Yield(_token.Token); 
+            await UniTask.Yield(_cancellationTokenSource.Token); 
         }
 
         _action.Invoke();
         Stop();
     }
 }
+}
+
