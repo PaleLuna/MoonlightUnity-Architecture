@@ -26,7 +26,7 @@ namespace PaleLuna.DataHolder
           * @param order Порядок, в котором элемент будет добавлен в коллекцию.
           * @return Зарегистрированный элемент.
           */
-        TP Registration<TP>(TP item, int order)
+        void Registration<TP>(TP item, int order)
             where TP : T;
 
         /**
@@ -47,7 +47,7 @@ namespace PaleLuna.DataHolder
            * @param item Элемент для регистрации.
            * @return Зарегистрированный элемент.
            */
-        TP Registration<TP>(TP item)
+        void Registration<TP>(TP item)
             where TP : T;
 
         /**
@@ -57,7 +57,7 @@ namespace PaleLuna.DataHolder
          * @param item Элемент для отмены регистрации.
          * @return Отмененный элемент.
          */
-        TP Unregistration<TP>(TP item)
+        bool Unregistration<TP>(TP item)
             where TP : T;
         TP Unregistration<TP>(int index) where TP : T;
 
