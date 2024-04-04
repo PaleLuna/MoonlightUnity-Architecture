@@ -15,11 +15,5 @@ namespace PaleLuna.Timers
         public ITimer SetTime(float time);
         public ITimer SetAction(UnityAction action);
     }
-    public enum TimerStatus 
-    {
-        Shutdown,
-        Pause,
-        Run
-    }
 }
 
