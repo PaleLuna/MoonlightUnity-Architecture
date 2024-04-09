@@ -6,7 +6,7 @@ using PaleLuna.Patterns.State;
 using PaleLuna.Patterns.State.Game;
 using UnityEngine;
 
-namespace PaleLuna.Architecture.Controllers
+namespace PaleLuna.Architecture.Loops
 {
     /**
      * @brief Класс GameController управляет различными аспектами игры.
@@ -14,7 +14,7 @@ namespace PaleLuna.Architecture.Controllers
      * GameController является главным контроллером игры, ответственным за управление обновлением, паузой и состояниями игры.
      * Реализует интерфейсы IService и IStartable, что позволяет его использование в качестве сервиса и компонента, который может быть инициализирован при старте.
      */
-    public class GameController : MonoBehaviour, IService, IStartable
+    public class GameLoops : MonoBehaviour, IService, IStartable
     {
         /**
         * @brief Флаг, указывающий, был ли GameController успешно инициализирован.

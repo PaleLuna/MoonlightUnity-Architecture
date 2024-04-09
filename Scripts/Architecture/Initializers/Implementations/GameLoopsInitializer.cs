@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using PaleLuna.Architecture.Controllers;
 using PaleLuna.Patterns.State.Game;
 using Services;
 using UnityEngine;
+using PaleLuna.Architecture.Loops;
 
 namespace PaleLuna.Architecture.Initializer
 {
@@ -13,7 +13,7 @@ namespace PaleLuna.Architecture.Initializer
  * GameControllerInitializer реализует интерфейс IInitializer и предназначен для инициализации компонента GameController
  * и его состояний при старте игры.
  */
-    public class GameControllerInitializer : IInitializer
+    public class GameLoopsInitializer : IInitializer
     {
         /**
          * @brief Текущий статус инициализации.
@@ -23,7 +23,7 @@ namespace PaleLuna.Architecture.Initializer
         /**
          * @brief Объект GameController, который будет инициализирован.
          */
-        private GameController _gameController;
+        private GameLoops _gameController;
 
         /**
        * @brief Родительский объект, к которому будет добавлен GameController.
@@ -45,7 +45,7 @@ namespace PaleLuna.Architecture.Initializer
         *
         * @param parent Родительский объект, к которому будет добавлен GameController.
         */
-        public GameControllerInitializer(GameObject parent)
+        public GameLoopsInitializer(GameObject parent)
         {
             _parent = parent;
         }
@@ -87,7 +87,7 @@ namespace PaleLuna.Architecture.Initializer
          */
         private void SetupGameController()
         {
-            _gameController = _parent.AddComponent<GameController>();
+            _gameController = _parent.AddComponent<GameLoops>();
             _gameController.OnStart();
         }
 
@@ -104,6 +104,6 @@ namespace PaleLuna.Architecture.Initializer
         /**
          * @brief Деструктор, который отменяет токен при уничтожении объекта.
          */
-        ~GameControllerInitializer() => _tokenSource.Cancel();
+        ~GameLoopsInitializer() => _tokenSource.Cancel();
     }
 }
