@@ -37,12 +37,9 @@ namespace PaleLuna.DataHolder
         * Создает экземпляр класса с указанной начальной емкостью (по умолчанию 10).
         * @param startCapacity Начальная емкость списка элементов.
         */
-        public DataHolder(int startCapacity = 0)
+        public DataHolder(int startCapacity = DEFAULT_CAPACITY)
         {
-            if (startCapacity <= 0)
-                _itemsList = new List<T>(DEFAULT_CAPACITY);
-            else
-                _itemsList = new List<T>(startCapacity);
+            _itemsList = new List<T>(DEFAULT_CAPACITY);
         }
 
         /**
@@ -114,13 +111,11 @@ namespace PaleLuna.DataHolder
          * dataHolder.Registration("Example", 0);
          * @endcode
          */
-        public TP Registration<TP>(TP item, int order)
+        public void Registration<TP>(TP item, int order)
             where TP : T
         {
             _itemsList.Insert(order, item);
             onItemAdded?.Invoke(item);
-
-            return item;
         }
 
             /**
@@ -136,12 +131,11 @@ namespace PaleLuna.DataHolder
          * dataHolder.Registration(3.14f);
          * @endcode
          */
-        public TP Registration<TP>(TP item)
+        public void Registration<TP>(TP item)
             where TP : T
         {
             _itemsList.Add(item);
             onItemAdded?.Invoke(item);
-            return item;
         }
 
         /**
@@ -158,11 +152,10 @@ namespace PaleLuna.DataHolder
      * dataHolder.Unregistration(itemToRemove);
      * @endcode
      */
-        public TP Unregistration<TP>(TP item)
+        public bool Unregistration<TP>(TP item)
             where TP : T
         {
-            _itemsList.Remove(item);
-            return item;
+            return _itemsList.Remove(item);
         }
         public TP Unregistration<TP>(int index)
             where TP : T

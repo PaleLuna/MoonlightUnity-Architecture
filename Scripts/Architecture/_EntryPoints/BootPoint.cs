@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using PaleLuna.Architecture.Controllers;
+using PaleLuna.Architecture.Loops;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Architecture.Services;
 using PaleLuna.Patterns.State.Game;
@@ -64,7 +64,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
             await base.Setup();
 
-            _globalServiceLocator.Get<GameController>().stateHolder.ChangeState<PlayState>();
+            _globalServiceLocator.Get<GameLoops>().stateHolder.ChangeState<PlayState>();
 
             JumpToScene();
         }
@@ -77,7 +77,7 @@ namespace PaleLuna.Architecture.EntryPoint
          * Добавляет GameControllerIInitializer в список инициализаторов.
          */
         protected override void FillInitializers() =>
-            _initializers.Registration(new GameControllerInitializer(_dontDestroyObject));
+            _initializers.Registration(new GameLoopsInitializer(_dontDestroyObject));
 
         /**
          * @brief Метод для перехода к указанной сцене.

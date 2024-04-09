@@ -1,4 +1,4 @@
-﻿using PaleLuna.Architecture.Controllers;
+﻿using PaleLuna.Architecture.Loops;
 
 namespace PaleLuna.Patterns.State.Game
 {
@@ -11,7 +11,7 @@ namespace PaleLuna.Patterns.State.Game
     public abstract class GameStateBase : State
     {
         /** @brief Контекст игры, представляющий GameController. */
-        protected GameController _context;
+        protected GameLoops _context;
 
         /**
      * @brief Конструктор класса.
@@ -20,7 +20,7 @@ namespace PaleLuna.Patterns.State.Game
      *
      * @param context Объект GameController, представляющий текущий контекст игры.
      */
-        public GameStateBase(GameController context) =>
+        public GameStateBase(GameLoops context) =>
             _context = context;
     }
 }

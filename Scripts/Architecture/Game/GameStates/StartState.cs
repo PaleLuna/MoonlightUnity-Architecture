@@ -1,4 +1,4 @@
-﻿using PaleLuna.Architecture.Controllers;
+﻿using PaleLuna.Architecture.Loops;
 
 namespace PaleLuna.Patterns.State.Game
 {
@@ -17,7 +17,7 @@ namespace PaleLuna.Patterns.State.Game
          *
          * @param context Объект GameController, представляющий текущий контекст игры.
          */
-        public StartState(GameController context) : base(context)
+        public StartState(GameLoops context) : base(context)
         {
         }
 
