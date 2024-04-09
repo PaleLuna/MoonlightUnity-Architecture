@@ -1,6 +1,6 @@
 {
   "name": "com.twilightmoongames.moonlightunityarchitecture",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "displayName": "MoonlightUnity Architecture",
   "description": "Basic architecture for writing games",
   "unity": "2019.1",
