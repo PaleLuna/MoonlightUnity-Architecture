@@ -1,6 +1,6 @@
 {
   "name": "com.twilightmoongames.moonlightunityarchitecture",
-  "version": "0.0.6",
+  "version": "0.1.7",
   "displayName": "MoonlightUnity Architecture",
   "description": "Basic architecture for writing games",
   "unity": "2019.1",
@@ -13,7 +13,7 @@
     }
   ],
   "author": {
-    "name": "PaleLuna",
+    "name": "TwilightMoon",
     "email": "palelunadeveloper@gmail.com",
     "url": "https://t.me/IPaleLunaI"
   }
