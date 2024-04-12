@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.Events;
 
 namespace PaleLuna.DataHolder.Dictinory
@@ -10,12 +11,12 @@ namespace PaleLuna.DataHolder.Dictinory
      * @tparam TKey Тип ключей словаря.
      * @tparam T Тип значений словаря.
      */
-    public class DictinoryHolder<TKey, T> : IDictionaryDataHolder<TKey, T>
+    public class DictionaryHolder<TKey, T> : IDictionaryDataHolder<TKey, T>
     {
         #region Properties
         private UnityEvent<T> _onItemAdded = new();
 
-        private Dictionary<TKey, T> _dictinory;
+        private Dictionary<TKey, T> _dictionary;
 
         /**
          * @brief Доступ к событию добавления элемента.
@@ -25,7 +26,7 @@ namespace PaleLuna.DataHolder.Dictinory
         /**
          * @brief Количество элементов в словаре.
          */
-        public int Count => _dictinory.Count;
+        public int Count => _dictionary.Count;
         #endregion
 
         #region Constructors
@@ -37,15 +38,15 @@ namespace PaleLuna.DataHolder.Dictinory
          * DictinoryHolder<int, string> dictionary = new DictinoryHolder<int, string>();
          * @endcode
          */
-        public DictinoryHolder()
+        public DictionaryHolder()
         {
-            _dictinory = new();
+            _dictionary = new();
         }
         #endregion
 
-        #region Registation Methods
+        #region Registration Methods
 
-        #region Registation
+        #region Registration
         /**
          * @brief Регистрирует элемент с заданным ключом в словаре.
          *
@@ -65,14 +66,14 @@ namespace PaleLuna.DataHolder.Dictinory
         {
             if (item != null)
             {
-                _dictinory[key] = item;
+                _dictionary[key] = item;
                 _onItemAdded?.Invoke(item);
             }
             return this;
         }
 
         #endregion
-        #region Unregistation
+        #region Unregistration
         /**
          * @brief Отменяет регистрацию элемента с заданным ключом из словаря.
          *
@@ -89,7 +90,7 @@ namespace PaleLuna.DataHolder.Dictinory
         {
             ThrowExpIfNoKey<T>(key);
 
-            _dictinory.Remove(key);
+            _dictionary.Remove(key);
 
             return this;
         }
@@ -112,8 +113,8 @@ namespace PaleLuna.DataHolder.Dictinory
         {
             ThrowExpIfNoKey<TP>(key);
 
-            TP item = (TP)_dictinory[key];
-            _dictinory.Remove(key);
+            TP item = (TP)_dictionary[key];
+            _dictionary.Remove(key);
 
             return item;
         }
@@ -140,14 +141,19 @@ namespace PaleLuna.DataHolder.Dictinory
         public TP Get<TP>(TKey key)
             where TP : T
         {
-            TP item = (TP)_dictinory[key];
+            TP item = (TP)_dictionary[key];
 
             if (item == null)
-                _dictinory.Remove(key);
+                _dictionary.Remove(key);
 
             return item;
         }
 
+            public TKey[] GetKeys() =>
+                _dictionary.Keys.ToArray();
+            
+            public T[] GetValues() =>
+                _dictionary.Values.ToArray();
         /**
          * @brief Индексатор для доступа и установки значений в словаре.
          *
@@ -156,10 +162,9 @@ namespace PaleLuna.DataHolder.Dictinory
          */
         public T this[TKey key]
         {
-            get => _dictinory[key];
+            get => _dictionary[key];
             set => Registration(key, value);
         }
-
         #endregion
 
         /**
@@ -175,7 +180,7 @@ namespace PaleLuna.DataHolder.Dictinory
          */
         public void ForEach(Action<T> action)
         {
-            foreach (T item in _dictinory.Values)
+            foreach (T item in _dictionary.Values)
                 action(item);
         }
 
@@ -195,7 +200,7 @@ namespace PaleLuna.DataHolder.Dictinory
         {
             List<T> list = new();
 
-            foreach (T item in _dictinory.Values)
+            foreach (T item in _dictionary.Values)
                 if (func(item))
                     list.Add(item);
 
@@ -214,7 +219,7 @@ namespace PaleLuna.DataHolder.Dictinory
          * bool containsKey = dictionary.ContainsKey(1);
          * @endcode
          */
-        public bool ContainsKey(TKey key) => _dictinory.ContainsKey(key);
+        public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
 
         private void ThrowExpIfNoKey<TP>(TKey key) where TP : T
         {
@@ -223,7 +228,7 @@ namespace PaleLuna.DataHolder.Dictinory
                     $"item of type {key.ToString()} doesn't exist in this map"
                 );
 
-            if(!(_dictinory[key] is TP))
+            if(!(_dictionary[key] is TP))
                 throw new InvalidCastException($"The key {key.ToString()} does not contain a type value {typeof(TP)}");
         }
     }
