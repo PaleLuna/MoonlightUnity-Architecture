@@ -261,13 +261,17 @@ namespace PaleLuna.DataHolder
             return _itemsList.ToArray();
         }
 
-        public void ForEach(Action<T> action) => _itemsList.ForEach(action);
+        public void ForEach(Action<T> action)
+        {
+            for(int i = 0; i < _itemsList.Count; i++)
+                action(_itemsList[i]);
+        }
 
         public IDataHolder<T> Filter(Func<T, bool> predicate)
         {
             DataHolder<T> temp = new DataHolder<T>(this.Count);
 
-            _itemsList.ForEach(item =>
+            ForEach(item =>
             {
                 if (predicate(item))
                     temp.Registration(item);
@@ -295,7 +299,7 @@ namespace PaleLuna.DataHolder
         {
             string res = "{ ";
 
-            _itemsList.ForEach(item => res += $"{item.ToString()} ");
+            ForEach(item => res += $"{item.ToString()} ");
 
             res += "}";
 
