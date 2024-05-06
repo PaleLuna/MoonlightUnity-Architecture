@@ -88,6 +88,59 @@ namespace PaleLuna.DataHolder.Updatables
          */
         public void Registration(ITickUpdatable item) => tickUpdatableHolder.Registration(item);
 
+
+        /**
+        * @brief Регистрация объекта с конкретным местом, обновляемого каждый кадр.
+        *
+        * @param item Объект для регистрации.
+        *
+        * Пример использования:
+        * @code
+        * UpdatablesHolder updatablesHolder = new UpdatablesHolder();
+        * updatablesHolder.Registration(new MyUpdatableObject(), 1);
+        * @endcode
+        */
+        public void Registration(IUpdatable item, int order) => everyFrameUpdatablesHolder.Registration(item, order);
+
+        /**
+        * @brief Регистрация объекта с конкретным местом, обновляемого в фиксированный кадр.
+        *
+        * @param item Объект для регистрации.
+        *
+        * Пример использования:
+        * @code
+        * UpdatablesHolder updatablesHolder = new UpdatablesHolder();
+        * updatablesHolder.Registration(new MyFixedUpdatableObject(), 1);
+        * @endcode
+        */
+        public void Registration(IFixedUpdatable item, int order) => fixedUpdatablesHolder.Registration(item, order);
+
+        /**
+        * @brief Регистрация объекта с конкретным местом, обновляемого после всех остальных обновлений.
+        *
+        * @param item Объект для регистрации.
+        *
+        * Пример использования:
+        * @code
+        * UpdatablesHolder updatablesHolder = new UpdatablesHolder();
+        * updatablesHolder.Registration(new MyLateUpdatableObject(), 1);
+        * @endcode
+        */
+        public void Registration(ILateUpdatable item, int order) => lateUpdatablesHolder.Registration(item, order);
+
+        /**
+         * @brief Регистрация объекта с конкретным местом, обновляемого с использованием таймера.
+         *
+         * @param item Объект для регистрации.
+         *
+         * Пример использования:
+         * @code
+         * UpdatablesHolder updatablesHolder = new UpdatablesHolder();
+         * updatablesHolder.Registration(new MyTickUpdatableObject(), 1);
+         * @endcode
+         */
+        public void Registration(ITickUpdatable item, int order) => tickUpdatableHolder.Registration(item, order);
+
         #endregion
 
         #region Unregistartion

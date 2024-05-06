@@ -65,30 +65,22 @@ namespace PaleLuna.Architecture.Loops
         }
 
         #region Registration
-        public void Registration(IUpdatable component) 
-        {
-            updatablesHolder.Registration(component);
-        }
-        public void Registration(IFixedUpdatable component)
-        {
-            updatablesHolder.Registration(component);
-        }
-        public void Registration(ILateUpdatable component)
-        {
-            updatablesHolder.Registration(component);
-        }
-        public void Unregistration(IUpdatable component) 
-        {
-            updatablesHolder.UnRegistration(component);
-        }
-        public void Unregistration(IFixedUpdatable component)
-        {
-            updatablesHolder.UnRegistration(component);
-        }
-        public void Unregistration(ILateUpdatable component)
-        {
-            updatablesHolder.UnRegistration(component);
-        }
+        
+        #region AddToList
+            public void Registration(IUpdatable component) => updatablesHolder.Registration(component);
+            public void Registration(IFixedUpdatable component) => updatablesHolder.Registration(component);
+            public void Registration(ILateUpdatable component) => updatablesHolder.Registration(component);
+    
+            public void Registration(IUpdatable component, int order) => updatablesHolder.Registration(component, order);
+            public void Registration(IFixedUpdatable component, int order) => updatablesHolder.Registration(component, order);
+            public void Registration(ILateUpdatable component, int order) => updatablesHolder.Registration(component, order);
+        #endregion
+
+        #region RemoveFromList
+            public void Unregistration(IUpdatable component)  => updatablesHolder.UnRegistration(component);
+            public void Unregistration(IFixedUpdatable component) => updatablesHolder.UnRegistration(component);
+            public void Unregistration(ILateUpdatable component) => updatablesHolder.UnRegistration(component);
+        #endregion
 
         #endregion
 
