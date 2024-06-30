@@ -7,28 +7,46 @@ namespace PaleLuna.Architecture.Services
     {
         private Dictionary<string, IBaggage> _baggages = new Dictionary<string, IBaggage>();
 
-        public SceneBaggage SetInt(string key,int num)
+        public SceneBaggage SetString(string key,string value)
         {
-            _baggages.Add(key, new IntBaggage(num));
+            AddOrUpdate(key, new StringBaggage(value));
             return this;
         }
-        public SceneBaggage SetFloat(string key, float num)
+        public SceneBaggage SetInt(string key,int value)
         {
-            _baggages.Add(key, new FloatBaggage(num));
+            AddOrUpdate(key, new IntBaggage(value));
+            return this;
+        }
+        public SceneBaggage SetFloat(string key, float value)
+        {
+            AddOrUpdate(key, new FloatBaggage(value));
             return this ;
         }
-        public SceneBaggage SetBool(string key, bool val)
+        public SceneBaggage SetBool(string key, bool value)
         {
-            _baggages.Add(key, new BoolBaggage(val));
+            AddOrUpdate(key, new BoolBaggage(value));
             return this;
         }
 
-        
+        public SceneBaggage AddBaggage(string key, IBaggage baggage)
+        {
+            AddOrUpdate(key, baggage);
+            return this;
+        }
+
+        public string GetString(string key)
+        {
+            TryCheckValueByKey(key, out IBaggage rawBaggage);
+            
+            StringBaggage baggage = rawBaggage as StringBaggage;
+
+            return baggage?.GetBaggage() ??
+                   throw new NullReferenceException($"The key \"{key}\" does not refer to the specified data type");
+        }
 
         public int GetInt(string key)
         {
-            if (!IsContainsKey(key))
-                throw new KeyNotFoundException("The key is not contained in the dictionary");
+            TryCheckValueByKey(key, out IBaggage rawBaggage);
             
             IntBaggage baggage = _baggages[key] as IntBaggage;
 
@@ -37,8 +55,7 @@ namespace PaleLuna.Architecture.Services
         }
         public float GetFloat(string key)
         {
-            if (!IsContainsKey(key))
-                throw new KeyNotFoundException("The key is not contained in the dictionary");
+            TryCheckValueByKey(key, out IBaggage rawBaggage);
             
             FloatBaggage baggage = _baggages[key] as FloatBaggage;
 
@@ -47,19 +64,29 @@ namespace PaleLuna.Architecture.Services
         }
         public bool GetBool(string key)
         {
-            if (!IsContainsKey(key))
-                throw new KeyNotFoundException("The key is not contained in the dictionary");
+            TryCheckValueByKey(key, out IBaggage rawBaggage);
             
             BoolBaggage baggage = _baggages[key] as BoolBaggage;
-
 
             return baggage?.GetBaggage() ??
                    throw new NullReferenceException($"The key \"{key}\" does not refer to the specified data type");
         }
 
-        private bool IsContainsKey(string key)
+        private void AddOrUpdate(string key, IBaggage rawBaggage)
         {
-            return _baggages.ContainsKey(key);
+            if(IsContainsKey(key)) _baggages[key] = rawBaggage;
+            else _baggages.Add(key, rawBaggage);
+        }
+
+        private bool IsContainsKey(string key) => _baggages.ContainsKey(key);
+
+        private bool TryCheckValueByKey(string key, out IBaggage value)
+        {
+            if(!IsContainsKey(key))
+                throw new KeyNotFoundException("The key is not contained in the dictionary");
+
+            value = _baggages[key];
+            return true;
         }
     }
 }
