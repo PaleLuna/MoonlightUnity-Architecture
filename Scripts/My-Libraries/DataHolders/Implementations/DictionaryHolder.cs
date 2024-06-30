@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 
-namespace PaleLuna.DataHolder.Dictinory
+namespace PaleLuna.DataHolder.Dictionary
 {
     /**
      * @brief Обобщенный класс-контейнер для словаря, реализующий интерфейс IDictionaryDataHolder.
@@ -230,6 +230,16 @@ namespace PaleLuna.DataHolder.Dictinory
 
             if(!(_dictionary[key] is TP))
                 throw new InvalidCastException($"The key {key.ToString()} does not contain a type value {typeof(TP)}");
+        }
+
+        public override string ToString()
+        {
+            string dictString = "";
+            
+            foreach(TKey key in _dictionary.Keys)
+                dictString += $"{key}: {_dictionary[key]}\n";
+
+            return dictString;
         }
     }
 }
