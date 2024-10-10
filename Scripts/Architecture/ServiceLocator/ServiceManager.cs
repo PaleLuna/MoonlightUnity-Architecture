@@ -10,7 +10,7 @@ namespace Services
     public class ServiceManager : Singletone<ServiceManager>
     {
         private ServiceLocator _globalServices;
-        private ServiceLocator _sceneServices;
+        private ServiceLocator _localServices;
 
         public ServiceLocator GlobalServices
         {
@@ -22,10 +22,10 @@ namespace Services
             }
         }
 
-        public ServiceLocator SceneLocator
+        public ServiceLocator LocalServices
         {
-            get => _sceneServices;
-            set => _sceneServices = value;
+            get => _localServices;
+            set => _localServices = value;
         }
     }
 }

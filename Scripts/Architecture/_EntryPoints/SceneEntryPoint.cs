@@ -34,7 +34,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
                 throw new OperationCanceledException("ServiceManager is null. Reload");
             }
-            ServiceManager.Instance.SceneLocator = _sceneServiceLocator;
+            ServiceManager.Instance.LocalServices = _sceneServiceLocator;
             FillSceneLocator();
 
             await UniTask.Yield();
