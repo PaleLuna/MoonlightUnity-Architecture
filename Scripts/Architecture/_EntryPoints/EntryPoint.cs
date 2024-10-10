@@ -1,10 +1,12 @@
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using PaleLuna.Architecture.GameComponent;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Attributes;
 using PaleLuna.DataHolder;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace PaleLuna.Architecture.EntryPoint
 {
@@ -15,10 +17,27 @@ namespace PaleLuna.Architecture.EntryPoint
      */
     public abstract class EntryPoint : MonoBehaviour
     {
+
+        [Foldout("Events")]
+        [SerializeField]
+        protected UnityEvent _initStartEvent = new();
+        [Foldout("Events")]
+        [SerializeField]
+        protected UnityEvent _initEndEvent = new();
+
+        [Foldout("Events")]
+        [SerializeField]
+        protected UnityEvent _startingComponentsStartEvent = new();
+        [Foldout("Events")]
+        [SerializeField]
+        protected UnityEvent _startingCompileComponentsEndEvent = new();
+
         /** @brief Количество элементов по умолчанию для списка инициализаторов. */
         private const int DEFAULT_LIST_CAPACITY = 10;
 
         /** @brief Список объектов MonoBehaviour, реализующих интерфейс IInitializer. */
+
+
         [SerializeReference, RequireInterface(typeof(IInitializer))]
         private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
 
@@ -70,6 +89,8 @@ namespace PaleLuna.Architecture.EntryPoint
        */
         protected virtual void StartAllInitializers()
         {
+            _initStartEvent.Invoke();
+
             _initializers.ForEach(initializer =>
             {
                 if (initializer.status == InitStatus.Shutdown)
@@ -105,7 +126,14 @@ namespace PaleLuna.Architecture.EntryPoint
          *
          * Этот метод вызывает метод OnStart для каждого компонента IStartable в коллекции _startables.
          */
-        protected void StartAllComponents() => _startables.ForEach(item => item.OnStart());
+        protected void StartAllComponents()
+        {
+            _startingComponentsStartEvent.Invoke();
+
+            _startables.ForEach(item => item.OnStart());
+
+            _startingCompileComponentsEndEvent.Invoke();
+        }
 
         /**
          * @brief Асинхронный метод для загрузки всех сервисов из списка инициализаторов.
@@ -134,6 +162,8 @@ namespace PaleLuna.Architecture.EntryPoint
 
                 await UniTask.Yield();
             }
+
+            _initEndEvent.Invoke();
         }
     }
 }
