@@ -15,46 +15,20 @@ namespace PaleLuna.Architecture.Initializer
  */
     public class GameLoopsInitializer : IInitializer
     {
-        /**
-         * @brief Текущий статус инициализации.
-         */
+
         private InitStatus _status = InitStatus.Shutdown;
 
-        /**
-         * @brief Объект GameController, который будет инициализирован.
-         */
-        private GameLoops _gameController;
+        private GameLoops _gameLoops;
 
-        /**
-       * @brief Родительский объект, к которому будет добавлен GameController.
-       */
         private GameObject _parent;
 
-        /**
-         * @brief Токен отмены для асинхронных операций.
-         */
-        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
-
-        /**
-         * @brief Получает текущий статус инициализации.
-         */
         public InitStatus status => _status;
 
-        /**
-        * @brief Конструктор инициализатора GameControllerInitializer.
-        *
-        * @param parent Родительский объект, к которому будет добавлен GameController.
-        */
         public GameLoopsInitializer(GameObject parent)
         {
             _parent = parent;
         }
 
-        /**
-         * @brief Метод, запускающий инициализацию GameController.
-         *
-         * Если текущий статус не Shutdown, инициализация не выполняется.
-         */
         public void StartInit()
         {
             if (_status != InitStatus.Shutdown)
@@ -62,48 +36,29 @@ namespace PaleLuna.Architecture.Initializer
 
             _status = InitStatus.Initialization;
 
-            _ = Init(_tokenSource.Token);
+            Init();
         }
 
-        /**
-         * @brief Асинхронный метод инициализации GameController.
-         *
-         * Инициализирует GameController, устанавливает состояния и регистрирует GameController в ServiceLocator.
-         */
-        private async UniTaskVoid Init(CancellationToken token)
+        private void Init()
         {
             SetupGameController();
-            await UniTask.Yield(cancellationToken: token);
             SetupStates();
-            await UniTask.Yield(cancellationToken: token);
 
-            ServiceManager.Instance.GlobalServices.Registarion(_gameController);
+            ServiceManager.Instance.GlobalServices.Registarion(_gameLoops);
 
             _status = InitStatus.Done;
         }
 
-        /**
-         * @brief Метод устанавливает GameController на объекте _parent.
-         */
         private void SetupGameController()
         {
-            _gameController = _parent.AddComponent<GameLoops>();
-            _gameController.OnStart();
+            _gameLoops = _parent.AddComponent<GameLoops>();
+            _gameLoops.OnStart();
         }
 
-        /**
-         * @brief Метод устанавливает состояния в stateHolder GameController.
-         */
         private void SetupStates()
         {
-            _gameController.stateHolder.Registarion(new StartState(_gameController));
-            _gameController.stateHolder.Registarion(new PlayState(_gameController));
-            _gameController.stateHolder.Registarion(new PauseState(_gameController));
+            _gameLoops.stateHolder.Registarion(new PlayState(_gameLoops));
+            _gameLoops.stateHolder.Registarion(new PauseState(_gameLoops));
         }
-
-        /**
-         * @brief Деструктор, который отменяет токен при уничтожении объекта.
-         */
-        ~GameLoopsInitializer() => _tokenSource.Cancel();
     }
 }
