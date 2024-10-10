@@ -27,11 +27,6 @@ namespace PaleLuna.Architecture.Loops
         public DataHolder<IPausable> pausablesHolder { get; private set; }
 
         /**
-         * @brief Хранилище компонентов, поддерживающих старт.
-         */
-        public DataHolder<IStartable> startableHolder { get; private set; }
-
-        /**
         * @brief Объект для хранения и управления обновляемыми компонентами.
         */
         public UpdatablesHolder updatablesHolder { get; private set; }
@@ -59,7 +54,6 @@ namespace PaleLuna.Architecture.Loops
 
             updatablesHolder = new UpdatablesHolder();
             pausablesHolder = new DataHolder<IPausable>();
-            startableHolder = new DataHolder<IStartable>();
 
             _isStarted = true;
         }
