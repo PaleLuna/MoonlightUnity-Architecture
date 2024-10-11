@@ -25,8 +25,14 @@ namespace PaleLuna.Patterns.State.Game
          * @brief Метод, вызываемый при начале состояния.
          *
          */
-        public override void StateStart() =>
+        public override void StateStart()
+        {
+            if(_context.GLConfig.tickMachineIsOn)
+                _context.tickMachine.Stop();
+
             _context.pausablesHolder
                 .ForEach(pausable => pausable.OnPause());
+        }
+            
     }
 }

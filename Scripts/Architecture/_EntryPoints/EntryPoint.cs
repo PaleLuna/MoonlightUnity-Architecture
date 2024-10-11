@@ -1,49 +1,52 @@
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using PaleLuna.Architecture.GameComponent;
 using PaleLuna.Architecture.Initializer;
 using PaleLuna.Attributes;
 using PaleLuna.DataHolder;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace PaleLuna.Architecture.EntryPoint
 {
-    /**
-     * @brief Абстрактный базовый класс для точек входа приложения.
-     *
-     * Этот класс предоставляет базовую структуру для управления инициализацией компонентов при запуске приложения.
-     */
     public abstract class EntryPoint : MonoBehaviour
     {
-        /** @brief Количество элементов по умолчанию для списка инициализаторов. */
         private const int DEFAULT_LIST_CAPACITY = 10;
 
-        /** @brief Список объектов MonoBehaviour, реализующих интерфейс IInitializer. */
-        [SerializeReference, RequireInterface(typeof(IInitializer))]
-        private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
+        #region [ Propertirs ]
 
-        /**
-        * @brief Список объектов, реализующих интерфейс IStartable, предназначенных для автоматического запуска.
-        *
-        * Объекты в этом списке будут автоматически запускаться после инициализации.
-        */
-        [Header("Startables")]
+        #region [ Events ]
+
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _initStartEvent = new();
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _initEndEvent = new();
+
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _startingComponentsStartEvent = new();
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _startingCompileComponentsEndEvent = new();
+
+        #endregion
+
+        [Header("List of objects to be initialized at scene startup"), HorizontalLine(color: EColor.Violet)]
+        [SerializeReference]
+        private List<InitializerBaseMono> _initializersMono = new(DEFAULT_LIST_CAPACITY);
+        
         [SerializeReference, RequireInterface(typeof(IStartable))]
-        private List<MonoBehaviour> _startablesMono;
+        private List<MonoBehaviour> _startupsMono;
 
-        /** @brief Коллекция объектов IStartable для управления запуском. */
-        private DataHolder<IStartable> _startables;
-        /** @brief Коллекция объектов IInitializer для управления запуском. */
+        private DataHolder<IStartable> _startups;
         protected DataHolder<IInitializer> _initializers = new(DEFAULT_LIST_CAPACITY);
+
+        [Space, SerializeField]
+        private bool _clearInitializersAfterInit = false;
+        #endregion
 
         protected virtual void Awake() =>
             _ = Setup();
-            
-        /**
-       * @brief Метод для настройки объекта EntryPoint.
-       *
-       * Этот метод вызывается при инициализации объекта EntryPoint и выполняет поиск всех компонентов.
-       */
+
         protected virtual async UniTask Setup()
         {
             FillInitializers();
@@ -54,22 +57,16 @@ namespace PaleLuna.Architecture.EntryPoint
 
             CompileAllComponents();
             StartAllComponents();
+
+            Clear();
         }
 
-        /**
-         * @brief Метод для заполнения списка инициализаторов.
-         *
-         * Переопределите этот метод в подклассе, чтобы добавить свои собственные инициализаторы.
-         */
         protected virtual void FillInitializers() { }
 
-        /**
-       * @brief Метод для запуска всех инициализаторов.
-       *
-       * Переопределите этот метод в подклассе, чтобы определить, какие инициализаторы запускать.
-       */
         protected virtual void StartAllInitializers()
         {
+            _initStartEvent.Invoke();
+
             _initializers.ForEach(initializer =>
             {
                 if (initializer.status == InitStatus.Shutdown)
@@ -77,17 +74,12 @@ namespace PaleLuna.Architecture.EntryPoint
             });
         }
 
-        /**
-        * @brief Метод для компиляции всех компонентов IStartable из списка _startablesMono.
-        *
-        * Этот метод создает коллекцию _startables и регистрирует в нее все компоненты IStartable.
-        */
         private void CompileAllComponents()
         {
-            _startables = new DataHolder<IStartable>(_startablesMono.Count);
-            _startablesMono.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
+            _startups = new DataHolder<IStartable>(_startupsMono.Count);
+            _startupsMono.ForEach(behaviour => _startups.Registration((IStartable)behaviour));
 
-            _startables.Registration(
+            _startups.Registration(
                 Searcher.ListOfAllByInterface<IStartable>(item => item.IsStarted == false),
                 ListRegistrationType.MergeToEndUnion
             );
@@ -100,18 +92,15 @@ namespace PaleLuna.Architecture.EntryPoint
             );
         }
 
-        /**
-         * @brief Метод для запуска всех компонентов IStartable.
-         *
-         * Этот метод вызывает метод OnStart для каждого компонента IStartable в коллекции _startables.
-         */
-        protected void StartAllComponents() => _startables.ForEach(item => item.OnStart());
+        protected void StartAllComponents()
+        {
+            _startingComponentsStartEvent.Invoke();
 
-        /**
-         * @brief Асинхронный метод для загрузки всех сервисов из списка инициализаторов.
-         *
-         * Этот метод ожидает, пока все инициализаторы не завершат свою работу.
-         */
+            _startups.ForEach(item => item.OnStart());
+
+            _startingCompileComponentsEndEvent.Invoke();
+        }
+
         protected async UniTask LoadAllServices()
         {
             int currentDoneInits = 0;
@@ -134,6 +123,24 @@ namespace PaleLuna.Architecture.EntryPoint
 
                 await UniTask.Yield();
             }
+
+            _initEndEvent.Invoke();
+        }
+
+        protected void Clear()
+        {
+            _startups.Clear();
+            _initializers.Clear();
+            _startupsMono.Clear();
+
+            if(_clearInitializersAfterInit)
+                ClearMono(_initializersMono);
+        }
+
+        private void ClearMono<T>(List<T> behaviours) where T : MonoBehaviour
+        {
+            behaviours.ForEach(item => Destroy(item));
+            behaviours.Clear();
         }
     }
 }

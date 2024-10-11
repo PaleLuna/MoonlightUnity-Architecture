@@ -1,13 +1,12 @@
 {
-    "name": "MoonlightUnityArchitecture",
+    "name": "MoonlightEditor",
     "rootNamespace": "",
     "references": [
-        "UniTask.Editor",
-        "UniTask",
-        "NaughtyAttributes.Core",
-        "NaughtyAttributes.Editor"
+        "GUID:7f359dea3ca5f654babc1f36f493a0b3"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

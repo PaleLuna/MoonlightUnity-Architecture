@@ -1,14 +1,16 @@
 {
   "name": "com.twilightmoongames.moonlightunityarchitecture",
-  "version": "0.1.813",
+  "version": "0.1.9",
   "displayName": "MoonlightUnity Architecture",
   "description": "Basic architecture for writing games",
   "unity": "2019.1",
-  "dependencies": { },
+  "dependencies": {
+    "com.dbrizov.naughtyattributes": "2.1.4"
+  },
   "samples": [
     {
       "displayName": "MoonlightUnity Scenes",
-      "description": "Примеры",
+      "description": "samples",
       "path": "Example~/MoonlightUnity Scenes"
     }
   ],
