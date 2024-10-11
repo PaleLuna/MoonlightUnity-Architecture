@@ -31,8 +31,8 @@ namespace PaleLuna.Architecture.EntryPoint
         #endregion
 
         [Header("List of objects to be initialized at scene startup"), HorizontalLine(color: EColor.Violet)]
-        [SerializeReference, RequireInterface(typeof(IInitializer))]
-        private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
+        [SerializeReference]
+        private List<InitializerBaseMono> _initializersMono = new(DEFAULT_LIST_CAPACITY);
         
         [SerializeReference, RequireInterface(typeof(IStartable))]
         private List<MonoBehaviour> _startupsMono;
@@ -137,7 +137,7 @@ namespace PaleLuna.Architecture.EntryPoint
                 ClearMono(_initializersMono);
         }
 
-        private void ClearMono(List<MonoBehaviour> behaviours)
+        private void ClearMono<T>(List<T> behaviours) where T : MonoBehaviour
         {
             behaviours.ForEach(item => Destroy(item));
             behaviours.Clear();
