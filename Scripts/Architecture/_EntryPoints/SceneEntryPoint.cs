@@ -26,7 +26,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
         protected override async UniTask Setup()
         {
-            CheckServiceManager();
+            if (!CheckServiceManager()) return;
 
             ServiceManager.Instance.LocalServices = _localServices;
             FillSceneLocator();
@@ -41,7 +41,7 @@ namespace PaleLuna.Architecture.EntryPoint
 
         protected virtual void ProcessBaggage() { }
 
-        private void CheckServiceManager()
+        private bool CheckServiceManager()
         {
             if (ServiceManager.Instance == null)
             {
@@ -50,7 +50,9 @@ namespace PaleLuna.Architecture.EntryPoint
                 Debug.LogWarning("ServiceManager is null. Reload");
 
                 sceneLoader.LoadScene(0);
+                return false;
             }
+            return true;
         }
 
         protected void SetGameState()
