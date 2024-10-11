@@ -17,10 +17,12 @@ namespace PaleLuna.Architecture.Initializer
     {
         private GameLoops _gameLoops;
 
+        private GameLoopsConfig _gameLoopsConfig;
         private GameObject _parent;
 
-        public GameLoopsInitializer(GameObject parent)
+        public GameLoopsInitializer(GameObject parent, GameLoopsConfig gameLoopsConfig)
         {
+            _gameLoopsConfig = gameLoopsConfig;
             _parent = parent;
         }
 
@@ -48,6 +50,7 @@ namespace PaleLuna.Architecture.Initializer
         {
             _gameLoops = _parent.AddComponent<GameLoops>();
             _gameLoops.OnStart();
+            _gameLoops.SetGLConfig(_gameLoopsConfig);
         }
 
         private void SetupStates()

@@ -6,6 +6,7 @@ using PaleLuna.Patterns.State.Game;
 using Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using NaughtyAttributes;
 
 namespace PaleLuna.Architecture.EntryPoint
 {
@@ -13,8 +14,12 @@ namespace PaleLuna.Architecture.EntryPoint
     public class BootPoint : EntryPoint
     {
         #region Properties
+        [Header("GameLoops settings"), HorizontalLine(color: EColor.Orange)]
+        [SerializeField]
+        private GameLoopsConfig _gameLoopsConfig;
 
-        [Header("Next scene params")]
+
+        [Header("Next scene params"), HorizontalLine(color: EColor.Green)]
         [SerializeField, Min(0)]
         private int _nextScene = 1;
 
@@ -50,7 +55,7 @@ namespace PaleLuna.Architecture.EntryPoint
         #region Auxiliary methods
 
         protected override void FillInitializers() =>
-            _initializers.Registration(new GameLoopsInitializer(_dontDestroyObject));
+            _initializers.Registration(new GameLoopsInitializer(_dontDestroyObject, _gameLoopsConfig));
 
         protected void JumpToScene(int sceneNum = -1)
         {
