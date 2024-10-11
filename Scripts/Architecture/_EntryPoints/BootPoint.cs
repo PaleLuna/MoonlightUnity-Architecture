@@ -15,7 +15,7 @@ namespace PaleLuna.Architecture.EntryPoint
     {
         #region Properties
         [Header("GameLoops settings"), HorizontalLine(color: EColor.Orange)]
-        [SerializeField]
+        [SerializeField, Required]
         private GameLoopsConfig _gameLoopsConfig;
 
 
