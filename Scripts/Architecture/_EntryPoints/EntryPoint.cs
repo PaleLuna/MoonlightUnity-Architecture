@@ -12,32 +12,37 @@ namespace PaleLuna.Architecture.EntryPoint
 {
     public abstract class EntryPoint : MonoBehaviour
     {
-
-        [Foldout("Events")]
-        [SerializeField]
-        protected UnityEvent _initStartEvent = new();
-        [Foldout("Events")]
-        [SerializeField]
-        protected UnityEvent _initEndEvent = new();
-
-        [Foldout("Events")]
-        [SerializeField]
-        protected UnityEvent _startingComponentsStartEvent = new();
-        [Foldout("Events")]
-        [SerializeField]
-        protected UnityEvent _startingCompileComponentsEndEvent = new();
-
         private const int DEFAULT_LIST_CAPACITY = 10;
 
+        #region [ Propertirs ]
+
+        #region [ Events ]
+
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _initStartEvent = new();
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _initEndEvent = new();
+
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _startingComponentsStartEvent = new();
+        [Foldout("Initialization events"), SerializeField]
+        protected UnityEvent _startingCompileComponentsEndEvent = new();
+
+        #endregion
+
+        [Header("List of objects to be initialized at scene startup"), HorizontalLine(color: EColor.Violet)]
         [SerializeReference, RequireInterface(typeof(IInitializer))]
         private List<MonoBehaviour> _initializersMono = new(DEFAULT_LIST_CAPACITY);
-
-        [Header("Startables")]
+        
         [SerializeReference, RequireInterface(typeof(IStartable))]
-        private List<MonoBehaviour> _startablesMono;
+        private List<MonoBehaviour> _startupsMono;
 
-        private DataHolder<IStartable> _startables;
+        private DataHolder<IStartable> _startups;
         protected DataHolder<IInitializer> _initializers = new(DEFAULT_LIST_CAPACITY);
+
+        [Space, SerializeField]
+        private bool _clearInitializersAfterInit = false;
+        #endregion
 
         protected virtual void Awake() =>
             _ = Setup();
@@ -52,6 +57,8 @@ namespace PaleLuna.Architecture.EntryPoint
 
             CompileAllComponents();
             StartAllComponents();
+
+            Clear();
         }
 
         protected virtual void FillInitializers() { }
@@ -69,10 +76,10 @@ namespace PaleLuna.Architecture.EntryPoint
 
         private void CompileAllComponents()
         {
-            _startables = new DataHolder<IStartable>(_startablesMono.Count);
-            _startablesMono.ForEach(behaviour => _startables.Registration((IStartable)behaviour));
+            _startups = new DataHolder<IStartable>(_startupsMono.Count);
+            _startupsMono.ForEach(behaviour => _startups.Registration((IStartable)behaviour));
 
-            _startables.Registration(
+            _startups.Registration(
                 Searcher.ListOfAllByInterface<IStartable>(item => item.IsStarted == false),
                 ListRegistrationType.MergeToEndUnion
             );
@@ -89,7 +96,7 @@ namespace PaleLuna.Architecture.EntryPoint
         {
             _startingComponentsStartEvent.Invoke();
 
-            _startables.ForEach(item => item.OnStart());
+            _startups.ForEach(item => item.OnStart());
 
             _startingCompileComponentsEndEvent.Invoke();
         }
@@ -118,6 +125,22 @@ namespace PaleLuna.Architecture.EntryPoint
             }
 
             _initEndEvent.Invoke();
+        }
+
+        protected void Clear()
+        {
+            _startups.Clear();
+            _initializers.Clear();
+            _startupsMono.Clear();
+
+            if(_clearInitializersAfterInit)
+                ClearMono(_initializersMono);
+        }
+
+        private void ClearMono(List<MonoBehaviour> behaviours)
+        {
+            behaviours.ForEach(item => Destroy(item));
+            behaviours.Clear();
         }
     }
 }
