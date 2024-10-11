@@ -13,23 +13,18 @@ namespace PaleLuna.Architecture.Initializer
  * GameControllerInitializer реализует интерфейс IInitializer и предназначен для инициализации компонента GameController
  * и его состояний при старте игры.
  */
-    public class GameLoopsInitializer : IInitializer
+    public class GameLoopsInitializer : InitializerBase
     {
-
-        private InitStatus _status = InitStatus.Shutdown;
-
         private GameLoops _gameLoops;
 
         private GameObject _parent;
-
-        public InitStatus status => _status;
 
         public GameLoopsInitializer(GameObject parent)
         {
             _parent = parent;
         }
 
-        public void StartInit()
+        public override void StartInit()
         {
             if (_status != InitStatus.Shutdown)
                 return;
